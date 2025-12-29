@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欧卡2 TMP查询机器人 - 部署指南</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',      // 微信绿色
+                        secondary: '#07AD5B',    // 深绿色
+                        accent: '#06BB64',       // 亮绿色
+                        neutral: '#F7F7F7',      // 浅灰色背景
+                        'neutral-dark': '#F2F2F2', // 深色背景
+                        'wechat-gray': '#333333', // 微信深灰文字
+                        'wechat-gray-light': '#666666', // 微信中灰文字
+                        'wechat-gray-lighter': '#999999', // 微信浅灰文字
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .wechat-card {
+                @apply bg-white rounded-xl shadow-sm border border-gray-100;
+            }
+            .wechat-text-primary {
+                @apply text-wechat-gray;
+            }
+            .wechat-text-secondary {
+                @apply text-wechat-gray-light;
+            }
+            .wechat-text-tertiary {
+                @apply text-wechat-gray-lighter;
+            }
+            .step-number {
+                @apply w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm;
+            }
+            .code-block {
+                @apply bg-gray-900 text-white p-4 rounded-lg text-sm overflow-x-auto;
+            }
+            .highlight {
+                @apply bg-primary/10 text-primary font-medium;
+            }
+            .command {
+                @apply bg-gray-100 text-primary px-2 py-1 rounded font-mono text-sm;
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral min-h-screen text-wechat-gray">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D" alt="欧卡2 Logo" class="h-10 w-10 rounded-lg object-cover">
+                <div>
+                    <h1 class="text-xl font-bold">微信机器人部署指南</h1>
+                    <p class="text-xs text-white/80">欧卡2 TMP查询工具</p>
+                </div>
+            </div>
+            <a href="index.html" class="text-white hover:text-white/80 transition-colors">
+                <i class="fa fa-arrow-left"></i> 返回工具
+            </a>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 介绍卡片 -->
+        <div class="wechat-card p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 wechat-text-primary">微信机器人查询功能</h2>
+            <p class="wechat-text-secondary mb-4">
+                本指南将详细介绍如何部署和使用欧卡2 TMP查询微信机器人，让您的微信群成员能够通过简单的命令直接在群聊中查询TMP账号信息。
+            </p>
+            <div class="bg-primary/10 border border-primary/20 rounded-lg p-4 flex items-center gap-3">
+                <i class="fa fa-info-circle text-primary text-xl"></i>
+                <p class="wechat-text-primary">
+                    无需打开网页，直接在微信群中查询TMP账号信息！
+                </p>
+            </div>
+        </div>
+
+        <!-- 功能介绍 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">功能介绍</h3>
+            
+            <div class="space-y-4">
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-comment text-primary"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium wechat-text-primary">命令查询</h4>
+                        <p class="text-sm wechat-text-secondary">
+                            在微信群中发送特定格式的命令，机器人会自动查询并回复结果。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-history text-primary"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium wechat-text-primary">查询历史</h4>
+                        <p class="text-sm wechat-text-secondary">
+                            记录查询历史，支持查看最近的查询记录。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-question-circle text-primary"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium wechat-text-primary">帮助系统</h4>
+                        <p class="text-sm wechat-text-secondary">
+                            提供详细的使用帮助，引导用户正确使用命令。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 支持的命令 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">支持的命令</h3>
+            
+            <div class="space-y-4">
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">查询TMP账号</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="command">#查询TMP 用户名</span>
+                            <i class="fa fa-arrow-right text-gray-400"></i>
+                            <span class="text-sm wechat-text-secondary">查询指定用户的TMP账号信息</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="command">@机器人 查询TMP 用户名</span>
+                            <i class="fa fa-arrow-right text-gray-400"></i>
+                            <span class="text-sm wechat-text-secondary">@机器人查询指定用户</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="command">/查询TMP 用户名</span>
+                            <i class="fa fa-arrow-right text-gray-400"></i>
+                            <span class="text-sm wechat-text-secondary">使用斜杠命令查询</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">其他命令</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="command">#历史查询</span>
+                            <i class="fa fa-arrow-right text-gray-400"></i>
+                            <span class="text-sm wechat-text-secondary">查看最近的查询历史</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="command">#TMP帮助</span>
+                            <i class="fa fa-arrow-right text-gray-400"></i>
+                            <span class="text-sm wechat-text-secondary">显示帮助信息</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 部署步骤 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">部署步骤</h3>
+            
+            <div class="space-y-6">
+                <!-- 环境准备 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">1. 环境准备</h4>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">安装Node.js</p>
+                                <p class="text-sm mt-1">
+                                    确保您的服务器已安装Node.js环境（推荐版本14.0以上）。
+                                </p>
+                                <div class="code-block mt-2">
+                                    # 检查Node.js版本<br>
+                                    node -v<br><br>
+                                    
+                                    # 如果未安装，请先安装Node.js<br>
+                                    # Ubuntu/Debian系统<br>
+                                    curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -<br>
+                                    sudo apt-get install -y nodejs<br><br>
+                                    
+                                    # CentOS系统<br>
+                                    curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash -<br>
+                                    sudo yum install -y nodejs
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">下载机器人脚本</p>
+                                <p class="text-sm mt-1">
+                                    将<code class="bg-gray-100 px-1 rounded">wechat_bot.js</code>文件下载到您的服务器上。
+                                </p>
+                                <div class="code-block mt-2">
+                                    # 创建工作目录<br>
+                                    mkdir -p tmp-bot<br>
+                                    cd tmp-bot<br><br>
+                                    
+                                    # 下载机器人脚本（示例，实际请从项目中获取）<br>
+                                    wget https://您的网站地址/wechat_bot.js
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- 安装依赖 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">2. 安装依赖</h4>
+                    <p class="wechat-text-secondary mb-4">
+                        微信机器人需要使用第三方库来实现微信消息的收发。由于微信官方没有提供开放的API，我们需要使用第三方库。
+                    </p>
+                    
+                    <div class="bg-warning/10 border border-warning/20 rounded-lg p-3 mb-4">
+                        <p class="text-sm wechat-text-primary">
+                            <i class="fa fa-exclamation-triangle text-warning mr-1"></i>
+                            注意：使用第三方微信机器人库可能违反微信使用条款，请谨慎使用。
+                        </p>
+                    </div>
+                    
+                    <p class="wechat-text-secondary mb-2">
+                        以下是使用WeChatBot库的安装步骤：
+                    </p>
+                    
+                    <div class="code-block mb-4">
+                        # 安装依赖包<br>
+                        npm init -y<br>
+                        npm install wechatbot-node<br>
+                        npm install axios
+                    </div>
+                    
+                    <p class="wechat-text-secondary">
+                        注意：由于微信的限制，不同的机器人库可能有不同的安装和使用方法。请参考您选择的库的官方文档。
+                    </p>
+                </div>
+                
+                <!-- 配置机器人 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">3. 配置机器人</h4>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">修改配置信息</p>
+                                <p class="text-sm mt-1">
+                                    编辑<code class="bg-gray-100 px-1 rounded">wechat_bot.js</code>文件，根据您的需求修改配置：
+                                </p>
+                                <div class="code-block mt-2">
+                                    // 修改为您想要的命令前缀<br>
+                                    const COMMAND_PREFIX = '#'; // 可以改为其他前缀<br><br>
+                                    
+                                    // 修改为您的机器人名称<br>
+                                    const BOT_NAME = 'TMP查询机器人';
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">配置API访问</p>
+                                <p class="text-sm mt-1">
+                                    在实际使用中，您需要将模拟数据替换为真实的TruckersMP API调用：
+                                </p>
+                                <div class="code-block mt-2">
+                                    // 替换为真实的API调用<br>
+                                    async queryUser(username) {<br>
+                                    &nbsp;&nbsp;const response = await axios.get(<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;`https://api.truckersmp.com/v2/users/search?search=${encodeURIComponent(username)}`<br>
+                                    &nbsp;&nbsp;);<br>
+                                    &nbsp;&nbsp;return response.data;<br>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- 运行机器人 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">4. 运行机器人</h4>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">启动机器人</p>
+                                <p class="text-sm mt-1">
+                                    运行以下命令启动机器人：
+                                </p>
+                                <div class="code-block mt-2">
+                                    node wechat_bot.js
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">扫码登录</p>
+                                <p class="text-sm mt-1">
+                                    根据提示，使用微信扫描二维码登录机器人账号。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">邀请机器人进群</p>
+                                <p class="text-sm mt-1">
+                                    将登录机器人的微信账号邀请到您的欧卡2游戏群中。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- 后台运行 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">5. 后台运行</h4>
+                    <p class="wechat-text-secondary mb-4">
+                        为了让机器人能够持续运行，您可以使用PM2等工具将其作为后台进程运行：
+                    </p>
+                    
+                    <div class="code-block">
+                        # 安装PM2<br>
+                        npm install -g pm2<br><br>
+                        
+                        # 使用PM2启动机器人<br>
+                        pm2 start wechat_bot.js --name tmp-query-bot<br><br>
+                        
+                        # 设置开机自启<br>
+                        pm2 startup<br>
+                        pm2 save<br><br>
+                        
+                        # 查看运行状态<br>
+                        pm2 status<br><br>
+                        
+                        # 查看日志<br>
+                        pm2 logs tmp-query-bot
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用示例 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">使用示例</h3>
+            
+            <div class="space-y-6">
+                <!-- 示例1：查询账号 -->
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-2">示例1：查询TMP账号</h4>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-gray-100 rounded-lg p-3 max-w-md">
+                            <div class="flex items-start gap-2">
+                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                                    用户
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">用户</p>
+                                    <p class="text-sm wechat-text-primary">#查询TMP yy10871</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 rounded-lg p-3 max-w-md ml-auto">
+                            <div class="flex items-start gap-2">
+                                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+                                    机器人
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">TMP查询机器人</p>
+                                    <p class="text-sm wechat-text-primary">🔍 正在查询TMP用户 "yy10871"，请稍候...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 rounded-lg p-3 max-w-md ml-auto">
+                            <div class="flex items-start gap-2">
+                                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+                                    机器人
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">TMP查询机器人</p>
+                                    <p class="text-sm wechat-text-primary">
+                                        🚛 <strong>TMP账号查询结果</strong> 🚛<br><br>
+                                        👤 <strong>用户名</strong>: yy10871<br>
+                                        🆔 <strong>TMP ID</strong>: 123456<br>
+                                        🕒 <strong>加入时间</strong>: 2023年1月15日<br>
+                                        🎮 <strong>Steam名称</strong>: yy10871<br>
+                                        📊 <strong>游戏时长</strong>: 1234小时<br>
+                                        🟢 <strong>在线状态</strong>: 🟢 在线<br>
+                                        🚚 <strong>所属VTC</strong>: 示例车队 [EX]<br>
+                                        ⚠️ <strong>封禁状态</strong>: ✅ 正常 (无封禁记录)<br><br>
+                                        🔗 <strong>查询链接</strong>: https://truckersmp.com/user/123456<br><br>
+                                        💡 提示：发送 "#查询TMP 用户名" 继续查询其他用户
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 示例2：查看帮助 -->
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-2">示例2：查看帮助</h4>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-gray-100 rounded-lg p-3 max-w-md">
+                            <div class="flex items-start gap-2">
+                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                                    用户
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">用户</p>
+                                    <p class="text-sm wechat-text-primary">#TMP帮助</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 rounded-lg p-3 max-w-md ml-auto">
+                            <div class="flex items-start gap-2">
+                                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+                                    机器人
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">TMP查询机器人</p>
+                                    <p class="text-sm wechat-text-primary">
+                                        🤖 <strong>欧卡2 TMP查询机器人使用说明</strong><br><br>
+                                        📝 <strong>查询命令</strong>:<br>
+                                        - #查询TMP 用户名<br>
+                                        - @机器人 查询TMP 用户名<br>
+                                        - /查询TMP 用户名<br><br>
+                                        📋 <strong>其他命令</strong>:<br>
+                                        - #历史查询 - 查看查询历史<br>
+                                        - #TMP帮助 - 显示此帮助信息<br><br>
+                                        🔍 <strong>支持查询</strong>:<br>
+                                        - 账号基本信息<br>
+                                        - 封禁记录查询<br>
+                                        - VTC团队信息<br><br>
+                                        💡 <strong>示例</strong>:<br>
+                                        #查询TMP yy10871
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">常见问题</h3>
+            
+            <div class="space-y-4">
+                <!-- 问题1 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 机器人登录失败怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 请检查您的网络连接，确保微信账号可以正常登录。如果是因为微信安全限制，请尝试使用新的微信账号，或者等待一段时间后再试。
+                    </p>
+                </div>
+                
+                <!-- 问题2 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 机器人无法接收或发送消息怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 请检查机器人是否已正确加入群聊，以及群聊设置是否允许机器人发言。另外，微信可能会限制第三方机器人的消息收发，请确保您使用的机器人库是最新版本。
+                    </p>
+                </div>
+                
+                <!-- 问题3 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 查询结果不准确怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 当前版本使用的是模拟数据，实际部署时需要连接真实的TruckersMP API。请确保您已正确配置API访问，并且API返回的数据格式与机器人期望的格式一致。
+                    </p>
+                </div>
+                
+                <!-- 问题4 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 机器人经常断线怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 微信会定期检测并断开第三方机器人的连接。您可以使用PM2等工具设置自动重启，或者考虑使用更稳定的机器人方案。
+                    </p>
+                </div>
+                
+                <!-- 问题5 -->
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 使用微信机器人有什么风险？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 使用第三方微信机器人可能违反微信使用条款，可能导致微信账号被限制或封禁。此外，机器人可能会收集和存储群聊中的消息，存在隐私风险。请谨慎使用，并确保遵守相关法律法规。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 替代方案 -->
+        <div class="wechat-card p-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">替代方案</h3>
+            
+            <p class="wechat-text-secondary mb-4">
+                由于微信机器人存在一定的风险和技术门槛，这里提供一些替代方案：
+            </p>
+            
+            <div class="space-y-4">
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-link text-primary"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium wechat-text-primary">直接分享链接</h4>
+                        <p class="text-sm wechat-text-secondary">
+                            将TMP查询工具的链接和二维码直接分享到微信群，用户可以点击链接进行查询。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-qrcode text-primary"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium wechat-text-primary">固定二维码</h4>
+                        <p class="text-sm wechat-text-secondary">
+                            将工具的二维码固定在群公告中，方便用户随时扫码使用。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-wechat text-primary"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-medium wechat-text-primary">微信公众号</h4>
+                        <p class="text-sm wechat-text-secondary">
+                            创建微信公众号，将TMP查询工具集成到公众号中，用户可以通过公众号菜单或关键词回复使用查询功能。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="bg-primary text-white mt-6">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-sm">欧卡2 TMP查询机器人 - 部署指南</p>
+                    <p class="text-xs text-white/60">© 2025 TMP Query Tool. All rights reserved.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fa fa-arrow-left mr-1"></i> 返回工具
+                    </a>
+                    <a href="wechat_guide.html" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fa fa-book mr-1"></i> 使用指南
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
