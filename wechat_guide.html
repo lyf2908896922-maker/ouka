@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欧卡2 TMP查询工具 - 微信使用指南</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',      // 微信绿色
+                        secondary: '#07AD5B',    // 深绿色
+                        accent: '#06BB64',       // 亮绿色
+                        neutral: '#F7F7F7',      // 浅灰色背景
+                        'neutral-dark': '#F2F2F2', // 深色背景
+                        'wechat-gray': '#333333', // 微信深灰文字
+                        'wechat-gray-light': '#666666', // 微信中灰文字
+                        'wechat-gray-lighter': '#999999', // 微信浅灰文字
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .wechat-card {
+                @apply bg-white rounded-xl shadow-sm border border-gray-100;
+            }
+            .wechat-text-primary {
+                @apply text-wechat-gray;
+            }
+            .wechat-text-secondary {
+                @apply text-wechat-gray-light;
+            }
+            .wechat-text-tertiary {
+                @apply text-wechat-gray-lighter;
+            }
+            .step-number {
+                @apply w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm;
+            }
+            .code-block {
+                @apply bg-gray-900 text-white p-4 rounded-lg text-sm overflow-x-auto;
+            }
+            .highlight {
+                @apply bg-primary/10 text-primary font-medium;
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral min-h-screen text-wechat-gray">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D" alt="欧卡2 Logo" class="h-10 w-10 rounded-lg object-cover">
+                <div>
+                    <h1 class="text-xl font-bold">微信使用指南</h1>
+                    <p class="text-xs text-white/80">欧卡2 TMP查询工具</p>
+                </div>
+            </div>
+            <a href="index.html" class="text-white hover:text-white/80 transition-colors">
+                <i class="fa fa-arrow-left"></i> 返回工具
+            </a>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 介绍卡片 -->
+        <div class="wechat-card p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 wechat-text-primary">欢迎使用欧卡2 TMP查询工具</h2>
+            <p class="wechat-text-secondary mb-4">
+                本指南将详细介绍如何在微信环境中部署和使用欧卡2 TMP查询工具，让您的微信群成员能够方便地查询TMP账号信息。
+            </p>
+            <div class="bg-primary/10 border border-primary/20 rounded-lg p-4 flex items-center gap-3">
+                <i class="fa fa-info-circle text-primary text-xl"></i>
+                <p class="wechat-text-primary">
+                    无需安装任何应用，直接在微信中使用！
+                </p>
+            </div>
+        </div>
+
+        <!-- 目录导航 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">目录</h3>
+            <ul class="space-y-2 wechat-text-secondary">
+                <li class="flex items-center gap-2">
+                    <i class="fa fa-circle text-xs text-primary"></i>
+                    <a href="#deployment" class="hover:text-primary transition-colors">1. 部署指南</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <i class="fa fa-circle text-xs text-primary"></i>
+                    <a href="#usage" class="hover:text-primary transition-colors">2. 使用方法</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <i class="fa fa-circle text-xs text-primary"></i>
+                    <a href="#wechat-integration" class="hover:text-primary transition-colors">3. 微信功能集成</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <i class="fa fa-circle text-xs text-primary"></i>
+                    <a href="#qrcode" class="hover:text-primary transition-colors">4. 生成专属二维码</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <i class="fa fa-circle text-xs text-primary"></i>
+                    <a href="#faq" class="hover:text-primary transition-colors">5. 常见问题</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 部署指南 -->
+        <div id="deployment" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary flex items-center gap-2">
+                <span class="step-number">1</span>
+                部署指南
+            </h3>
+            
+            <div class="space-y-6">
+                <!-- 部署方式选择 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">1.1 选择部署方式</h4>
+                    <p class="wechat-text-secondary mb-4">
+                        欧卡2 TMP查询工具支持多种部署方式，您可以根据自己的需求选择最合适的方式：
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors cursor-pointer">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fa fa-cloud text-primary"></i>
+                                <h5 class="font-bold wechat-text-primary">云服务器部署</h5>
+                            </div>
+                            <p class="wechat-text-secondary text-sm">
+                                将工具部署到自己的云服务器或虚拟主机上，完全控制和定制。
+                            </p>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors cursor-pointer">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fa fa-code text-primary"></i>
+                                <h5 class="font-bold wechat-text-primary">静态网站托管</h5>
+                            </div>
+                            <p class="wechat-text-secondary text-sm">
+                                使用GitHub Pages、Netlify等免费静态网站托管服务，简单快捷。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 云服务器部署步骤 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">1.2 云服务器部署步骤</h4>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">准备服务器环境</p>
+                                <p class="text-sm mt-1">
+                                    确保您的服务器已安装Web服务器软件（如Nginx、Apache等），并支持HTML、CSS和JavaScript。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">上传文件</p>
+                                <p class="text-sm mt-1">
+                                    将以下文件上传到您的服务器网站根目录：
+                                </p>
+                                <ul class="list-disc list-inside text-sm mt-1 space-y-1">
+                                    <li>index.html（主页面）</li>
+                                    <li>wechat_guide.html（本指南）</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">配置HTTPS</p>
+                                <p class="text-sm mt-1">
+                                    微信要求网页必须使用HTTPS协议。请确保您的网站已配置SSL证书，启用HTTPS访问。
+                                </p>
+                                <div class="bg-gray-100 p-2 rounded text-xs mt-1">
+                                    <span class="text-danger">重要：</span> 没有HTTPS，微信将无法正常使用分享等功能！
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">4</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">测试访问</p>
+                                <p class="text-sm mt-1">
+                                    打开浏览器，访问您的网站地址，确认工具可以正常打开和使用。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- GitHub Pages部署步骤 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">1.3 GitHub Pages部署步骤</h4>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">创建GitHub仓库</p>
+                                <p class="text-sm mt-1">
+                                    登录GitHub，创建一个新的仓库，命名为<code class="bg-gray-100 px-1 rounded">tmp-query-tool</code>或其他您喜欢的名称。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">上传文件</p>
+                                <p class="text-sm mt-1">
+                                    将工具文件上传到GitHub仓库：
+                                </p>
+                                <div class="code-block mt-1">
+                                    # 克隆仓库（在本地执行）<br>
+                                    git clone https://github.com/您的用户名/tmp-query-tool.git<br><br>
+                                    
+                                    # 复制文件到仓库目录<br>
+                                    cp index.html wechat_guide.html tmp-query-tool/<br><br>
+                                    
+                                    # 提交并推送更改<br>
+                                    cd tmp-query-tool<br>
+                                    git add .<br>
+                                    git commit -m "添加TMP查询工具文件"<br>
+                                    git push origin main
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">启用GitHub Pages</p>
+                                <p class="text-sm mt-1">
+                                    在GitHub仓库页面，点击"Settings" → "Pages"，在"Source"选项中选择分支（如main），然后点击"Save"。
+                                </p>
+                                <p class="text-sm mt-1">
+                                    几分钟后，您的网站将可以通过 <code class="bg-gray-100 px-1 rounded">https://您的用户名.github.io/tmp-query-tool/</code> 访问。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- 配置微信JS-SDK -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">1.4 配置微信JS-SDK（可选）</h4>
+                    <p class="wechat-text-secondary mb-4">
+                        如果您需要使用完整的微信分享功能，需要配置微信JS-SDK。这一步需要您有一个微信公众号。
+                    </p>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">获取AppID和AppSecret</p>
+                                <p class="text-sm mt-1">
+                                    登录微信公众平台（mp.weixin.qq.com），在"开发" → "基本配置"中获取AppID和AppSecret。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">配置JS接口安全域名</p>
+                                <p class="text-sm mt-1">
+                                    在"设置" → "公众号设置" → "功能设置"中，设置"JS接口安全域名"为您的网站域名。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">修改配置文件</p>
+                                <p class="text-sm mt-1">
+                                    编辑index.html文件，找到以下代码并修改：
+                                </p>
+                                <div class="code-block mt-1">
+                                    const WECHAT_CONFIG = {<br>
+                                    &nbsp;&nbsp;appId: 'wx1234567890123456', // 替换为实际的AppID<br>
+                                    &nbsp;&nbsp;debug: false,<br>
+                                    &nbsp;&nbsp;jsApiList: [<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;'onMenuShareAppMessage',<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;'onMenuShareTimeline',<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;'showOptionMenu',<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;'hideMenuItems'<br>
+                                    &nbsp;&nbsp;]<br>
+                                    };
+                                </div>
+                                <p class="text-sm mt-1">
+                                    将 <code class="bg-gray-100 px-1 rounded">wx1234567890123456</code> 替换为您的实际AppID。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">4</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">实现签名生成</p>
+                                <p class="text-sm mt-1">
+                                    注意：完整的JS-SDK配置需要在服务器端生成签名。由于本工具是纯前端应用，默认使用了模拟数据。
+                                </p>
+                                <p class="text-sm mt-1">
+                                    如果您需要完整功能，需要在服务器端实现签名生成逻辑，并通过API提供给前端。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用方法 -->
+        <div id="usage" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary flex items-center gap-2">
+                <span class="step-number">2</span>
+                使用方法
+            </h3>
+            
+            <div class="space-y-6">
+                <!-- 基本使用步骤 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">2.1 基本使用步骤</h4>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">访问工具</p>
+                                <p class="text-sm mt-1">
+                                    在微信中点击分享链接，或扫描二维码，打开欧卡2 TMP查询工具。
+                                </p>
+                                <div class="mt-2">
+                                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D" alt="工具界面示例" class="rounded-lg max-w-full h-auto">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">输入查询信息</p>
+                                <p class="text-sm mt-1">
+                                    在查询框中输入TMP用户名、TMP ID或SteamID64。
+                                </p>
+                                <div class="bg-gray-100 p-2 rounded text-xs mt-1">
+                                    <span class="text-primary">提示：</span> SteamID64可以在Steam个人资料页面查看，或使用第三方工具如steamid.io获取。
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">选择查询类型</p>
+                                <p class="text-sm mt-1">
+                                    从下拉菜单中选择查询类型：
+                                </p>
+                                <ul class="list-disc list-inside text-sm mt-1 space-y-1">
+                                    <li><span class="highlight">账号信息</span> - 查询用户的基本信息、状态等</li>
+                                    <li><span class="highlight">封禁记录</span> - 查询用户的封禁历史</li>
+                                    <li><span class="highlight">VTC信息</span> - 查询用户所属的VTC团队信息</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">4</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">点击查询按钮</p>
+                                <p class="text-sm mt-1">
+                                    点击"开始查询"按钮，等待查询结果。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">5</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">查看结果</p>
+                                <p class="text-sm mt-1">
+                                    查询结果将显示在页面上，包括用户的账号状态、加入时间、封禁记录等信息。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- 高级功能 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">2.2 高级功能使用</h4>
+                    
+                    <!-- 收藏功能 -->
+                    <div class="mb-4">
+                        <h5 class="font-medium wechat-text-primary mb-1">收藏功能</h5>
+                        <p class="text-sm wechat-text-secondary">
+                            在查询结果页面，点击"收藏"按钮，可以将当前查询的用户添加到收藏列表中，方便下次快速查询。
+                        </p>
+                        <div class="bg-gray-100 p-2 rounded text-xs mt-1">
+                            <span class="text-primary">提示：</span> 收藏记录保存在本地，更换设备后需要重新收藏。
+                        </div>
+                    </div>
+                    
+                    <!-- 历史记录 -->
+                    <div class="mb-4">
+                        <h5 class="font-medium wechat-text-primary mb-1">历史记录</h5>
+                        <p class="text-sm wechat-text-secondary">
+                            工具会自动保存最近的查询记录，点击历史记录中的条目可以快速重新查询。
+                        </p>
+                    </div>
+                    
+                    <!-- 下拉刷新 -->
+                    <div class="mb-4">
+                        <h5 class="font-medium wechat-text-primary mb-1">下拉刷新</h5>
+                        <p class="text-sm wechat-text-secondary">
+                            在页面顶部向下拉动，可以刷新当前查询结果或重新加载页面。
+                        </p>
+                    </div>
+                    
+                    <!-- 分享功能 -->
+                    <div>
+                        <h5 class="font-medium wechat-text-primary mb-1">分享功能</h5>
+                        <p class="text-sm wechat-text-secondary">
+                            点击页面顶部的分享按钮，可以将当前查询结果分享给微信好友或分享到朋友圈。
+                        </p>
+                        <div class="bg-gray-100 p-2 rounded text-xs mt-1">
+                            <span class="text-primary">提示：</span> 分享功能需要在微信环境中使用。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 微信功能集成 -->
+        <div id="wechat-integration" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary flex items-center gap-2">
+                <span class="step-number">3</span>
+                微信功能集成
+            </h3>
+            
+            <div class="space-y-6">
+                <!-- 微信公众号菜单 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">3.1 添加到微信公众号菜单</h4>
+                    <p class="wechat-text-secondary mb-4">
+                        如果您有自己的微信公众号，可以将TMP查询工具添加到公众号菜单中，方便粉丝使用。
+                    </p>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">登录微信公众平台</p>
+                                <p class="text-sm mt-1">
+                                    访问 <a href="https://mp.weixin.qq.com" target="_blank" class="text-primary hover:underline">mp.weixin.qq.com</a>，使用公众号账号登录。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">进入自定义菜单设置</p>
+                                <p class="text-sm mt-1">
+                                    在左侧菜单中点击"自定义菜单"。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">创建菜单</p>
+                                <p class="text-sm mt-1">
+                                    点击"添加菜单"按钮，输入菜单名称（如"查询TMP"）。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">4</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">设置菜单内容</p>
+                                <p class="text-sm mt-1">
+                                    选择"跳转网页"，在"网页链接"中输入您的TMP查询工具网址。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">5</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">保存并发布</p>
+                                <p class="text-sm mt-1">
+                                    点击"保存并发布"按钮，等待菜单生效（通常需要10分钟左右）。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- 微信群机器人 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">3.2 集成微信群机器人（可选）</h4>
+                    <p class="wechat-text-secondary mb-4">
+                        您可以将TMP查询工具与微信群机器人集成，实现通过群聊命令查询TMP账号信息。
+                    </p>
+                    <p class="wechat-text-secondary mb-2">
+                        以下是使用微信机器人平台（如WeTool、酷Q等）的基本集成步骤：
+                    </p>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">选择机器人平台</p>
+                                <p class="text-sm mt-1">
+                                    选择一个适合的微信机器人平台，如WeTool、酷Q等。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">编写查询命令</p>
+                                <p class="text-sm mt-1">
+                                    配置机器人响应特定命令（如"#查询TMP 用户名"），调用查询工具。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">返回查询结果</p>
+                                <p class="text-sm mt-1">
+                                    机器人调用查询工具API，获取结果并发送到群聊中。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                    <div class="bg-warning/10 border border-warning/20 rounded-lg p-3 mt-4">
+                        <p class="text-sm wechat-text-primary">
+                            <i class="fa fa-exclamation-triangle text-warning mr-1"></i>
+                            注意：使用第三方微信机器人可能违反微信使用条款，请谨慎使用。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 生成专属二维码 -->
+        <div id="qrcode" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary flex items-center gap-2">
+                <span class="step-number">4</span>
+                生成专属二维码
+            </h3>
+            
+            <div class="space-y-6">
+                <!-- 二维码生成方法 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">4.1 在线生成二维码</h4>
+                    <p class="wechat-text-secondary mb-4">
+                        使用在线二维码生成工具，为您的TMP查询工具创建专属二维码，方便在微信群中分享。
+                    </p>
+                    <ol class="space-y-4 wechat-text-secondary">
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">选择二维码生成网站</p>
+                                <p class="text-sm mt-1">
+                                    推荐使用以下网站：
+                                </p>
+                                <ul class="list-disc list-inside text-sm mt-1 space-y-1">
+                                    <li><a href="https://cli.im" target="_blank" class="text-primary hover:underline">草料二维码</a></li>
+                                    <li><a href="https://www.qr-code-generator.com" target="_blank" class="text-primary hover:underline">QR Code Generator</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">输入工具网址</p>
+                                <p class="text-sm mt-1">
+                                    在二维码生成器中输入您部署的TMP查询工具网址。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">自定义二维码</p>
+                                <p class="text-sm mt-1">
+                                    可以上传欧卡2或卡车相关的logo作为二维码中心图标，选择微信绿色作为二维码颜色。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="step-number flex-shrink-0">4</span>
+                            <div>
+                                <p class="font-medium wechat-text-primary">下载并分享</p>
+                                <p class="text-sm mt-1">
+                                    下载生成的二维码图片，分享到微信群或朋友圈。
+                                </p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- 二维码设计建议 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">4.2 二维码设计建议</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h5 class="font-medium wechat-text-primary mb-2">推荐设计</h5>
+                            <ul class="list-disc list-inside text-sm wechat-text-secondary space-y-1">
+                                <li>使用微信绿色作为主色调</li>
+                                <li>添加欧卡2或卡车logo</li>
+                                <li>选择高对比度颜色</li>
+                                <li>添加简单文字说明</li>
+                            </ul>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h5 class="font-medium wechat-text-primary mb-2">避免的设计</h5>
+                            <ul class="list-disc list-inside text-sm wechat-text-secondary space-y-1">
+                                <li>过于复杂的图案</li>
+                                <li>低对比度颜色</li>
+                                <li>过小的二维码尺寸</li>
+                                <li>过多的文字说明</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 示例二维码 -->
+                <div>
+                    <h4 class="font-bold wechat-text-primary mb-2">4.3 示例二维码</h4>
+                    <div class="flex justify-center">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                            <div class="w-48 h-48 bg-gray-200 flex items-center justify-center">
+                                <i class="fa fa-qrcode text-6xl text-gray-400"></i>
+                            </div>
+                            <p class="text-center wechat-text-secondary text-sm mt-2">
+                                您的TMP查询工具二维码将显示在这里
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div id="faq" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary flex items-center gap-2">
+                <span class="step-number">5</span>
+                常见问题
+            </h3>
+            
+            <div class="space-y-4">
+                <!-- 问题1 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 为什么在微信中打开显示"不安全"提示？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 这是因为您的网站没有配置HTTPS证书。微信要求所有网页必须使用HTTPS协议。请为您的网站配置SSL证书，启用HTTPS访问。
+                    </p>
+                </div>
+                
+                <!-- 问题2 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 分享功能无法使用怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 分享功能需要正确配置微信JS-SDK。请确保您已在微信公众平台配置了正确的JS接口安全域名，并且修改了index.html中的AppID配置。如果您只是个人使用，也可以直接复制链接分享给好友。
+                    </p>
+                </div>
+                
+                <!-- 问题3 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 查询结果不准确或无法查询怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 请检查输入的TMP用户名或ID是否正确。如果问题仍然存在，可能是因为TruckersMP API暂时不可用，请稍后再试。目前版本使用的是模拟数据，实际部署时需要连接真实的TruckersMP API。
+                    </p>
+                </div>
+                
+                <!-- 问题4 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 收藏和历史记录在不同设备间不同步怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 收藏和历史记录是保存在本地浏览器中的，无法自动同步到其他设备。如果需要在多台设备上使用，可以考虑将常用的查询结果分享给自己，方便在其他设备上快速访问。
+                    </p>
+                </div>
+                
+                <!-- 问题5 -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 如何自定义工具的外观和功能？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 您可以编辑index.html文件，修改其中的样式、颜色、文字等内容。如果您有编程经验，还可以添加新功能或修改现有功能。
+                    </p>
+                </div>
+                
+                <!-- 问题6 -->
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 是否支持其他游戏平台或模组？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 目前工具仅支持TruckersMP模组。如果您需要支持其他平台或模组，需要修改代码并集成相应的API。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 联系支持 -->
+        <div class="wechat-card p-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">联系支持</h3>
+            <p class="wechat-text-secondary mb-4">
+                如果您在使用过程中遇到任何问题，或需要进一步的帮助，请通过以下方式联系我们：
+            </p>
+            <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-envelope text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm wechat-text-tertiary">邮箱</p>
+                        <p class="wechat-text-primary">support@example.com</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-wechat text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm wechat-text-tertiary">微信</p>
+                        <p class="wechat-text-primary">WeChatSupport</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="bg-primary text-white mt-6">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-sm">欧卡2 TMP查询工具 - 微信使用指南</p>
+                    <p class="text-xs text-white/60">© 2025 TMP Query Tool. All rights reserved.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fa fa-arrow-left mr-1"></i> 返回工具
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

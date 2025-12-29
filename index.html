@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欧卡2 TMP查询工具 - 微信群专用</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',      // 微信绿色
+                        secondary: '#07AD5B',    // 深绿色
+                        accent: '#06BB64',       // 亮绿色
+                        neutral: '#F7F7F7',      // 浅灰色背景
+                        'neutral-dark': '#F2F2F2', // 深色背景
+                        success: '#07C160',      // 绿色
+                        warning: '#F59E0B',      // 黄色
+                        danger: '#EF4444',       // 红色
+                        'wechat-gray': '#333333', // 微信深灰文字
+                        'wechat-gray-light': '#666666', // 微信中灰文字
+                        'wechat-gray-lighter': '#999999', // 微信浅灰文字
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+            }
+            .btn-primary {
+                @apply bg-primary text-white px-6 py-4 rounded-lg font-semibold shadow-md hover:bg-primary/90 hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-base;
+            }
+            .btn-secondary {
+                @apply bg-white text-primary px-6 py-4 rounded-lg font-semibold shadow-md border border-primary hover:bg-primary/5 hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-base;
+            }
+            .input-primary {
+                @apply w-full px-4 py-4 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-300 text-base;
+            }
+            .wechat-card {
+                @apply bg-white rounded-xl shadow-sm border border-gray-100;
+            }
+            .wechat-header {
+                @apply bg-primary text-white sticky top-0 z-50 border-b border-gray-200/20;
+            }
+            .wechat-text-primary {
+                @apply text-wechat-gray;
+            }
+            .wechat-text-secondary {
+                @apply text-wechat-gray-light;
+            }
+            .wechat-text-tertiary {
+                @apply text-wechat-gray-lighter;
+            }
+            .status-badge {
+                @apply px-3 py-1 rounded-full text-xs font-semibold;
+            }
+            .status-active {
+                @apply bg-success/20 text-success;
+            }
+            .status-banned {
+                @apply bg-danger/20 text-danger;
+            }
+            .status-inactive {
+                @apply bg-gray-200 text-gray-700;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-primary to-neutral-dark min-h-screen text-gray-800">
+    <!-- 顶部导航栏 -->
+    <header class="wechat-header">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D" alt="欧卡2 Logo" class="h-10 w-10 rounded-lg object-cover">
+                <div>
+                    <h1 class="text-xl font-bold text-white">欧卡2 TMP查询工具</h1>
+                    <p class="text-xs text-white/80">微信群专用版</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="wechat-share-btn" class="p-2 rounded-full hover:bg-white/20 transition-colors">
+                    <i class="fa fa-share-alt text-white"></i>
+                </button>
+                <button id="help-btn" class="p-2 rounded-full hover:bg-white/20 transition-colors">
+                    <i class="fa fa-question-circle text-white"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 微信提示 -->
+        <div class="bg-primary/10 border border-primary/20 rounded-lg p-4 mb-6 flex items-center gap-3">
+            <i class="fa fa-info-circle text-primary text-xl"></i>
+            <div>
+                <p class="wechat-text-primary font-medium">欢迎使用微信版TMP查询工具</p>
+                <p class="wechat-text-secondary text-sm">支持直接分享查询结果到微信群和好友</p>
+            </div>
+        </div>
+        
+        <!-- 查询表单卡片 -->
+        <div class="wechat-card p-6 mb-6 animate-fade-in">
+            <h2 class="text-xl font-bold mb-6 text-center wechat-text-primary">TMP账号查询</h2>
+            <form id="search-form" class="space-y-6">
+                <div class="space-y-4">
+                    <div>
+                        <label for="player-id" class="block text-sm font-medium wechat-text-secondary mb-2">输入TMP用户名或ID</label>
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="player-id" 
+                                name="player-id" 
+                                class="input-primary pl-12" 
+                                placeholder="例如: username 或 123456 或 SteamID64"
+                                required
+                            >
+                            <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-wechat-gray-lighter"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="search-type" class="block text-sm font-medium wechat-text-secondary mb-2">查询类型</label>
+                        <select id="search-type" class="input-primary">
+                            <option value="player">账号信息</option>
+                            <option value="bans">封禁记录</option>
+                            <option value="vtc">VTC信息</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit" class="btn-primary w-full">
+                        <i class="fa fa-search"></i>
+                        开始查询
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 结果展示区域 -->
+        <div id="results-container" class="hidden animate-fade-in">
+            <!-- 加载状态 -->
+            <div id="loading-state" class="wechat-card p-8 text-center hidden">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
+                <p class="text-lg font-medium wechat-text-primary">正在查询TMP服务器，请稍候...</p>
+            </div>
+
+            <!-- 错误状态 -->
+            <div id="error-state" class="wechat-card p-8 text-center hidden">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-danger/10 text-danger mb-4">
+                    <i class="fa fa-exclamation-triangle text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 wechat-text-primary">查询失败</h3>
+                <p id="error-message" class="wechat-text-secondary">未找到该用户信息，请检查输入是否正确。</p>
+            </div>
+
+            <!-- 玩家信息结果 -->
+            <div id="player-result" class="wechat-card p-6 mb-6 hidden animate-slide-up">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- 左侧个人信息 -->
+                    <div class="md:w-1/3 flex flex-col items-center text-center p-4 border-r border-gray-200/50">
+                        <div class="relative mb-4">
+                            <img id="player-avatar" src="https://via.placeholder.com/150" alt="玩家头像" class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                            <span id="player-status" class="status-badge absolute -top-2 -right-2 border-2 border-white">活跃</span>
+                        </div>
+                        <h3 id="player-name" class="text-2xl font-bold mb-1">用户名</h3>
+                        <p id="player-id-display" class="text-sm text-gray-500 mb-4">TMP ID: 123456</p>
+                        
+                        <div class="space-y-3 w-full">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">加入时间:</span>
+                                <span id="player-join-date" class="font-medium">2023-01-01</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">SteamID:</span>
+                                <span id="player-steamid" class="font-medium">76561198000000000</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">所属团队:</span>
+                                <span id="player-group" class="font-medium">无</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex flex-wrap gap-2 justify-center">
+                            <button id="add-favorite" class="px-4 py-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center gap-1">
+                                <i class="fa fa-star-o"></i>
+                                <span>收藏</span>
+                            </button>
+                            <button id="share-result" class="px-4 py-2 rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 transition-colors flex items-center gap-1">
+                                <i class="fa fa-share-alt"></i>
+                                <span>分享</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧详细信息 -->
+                    <div class="md:w-2/3 p-4">
+                        <div class="mb-6">
+                            <h4 class="text-lg font-bold mb-3 flex items-center">
+                                <i class="fa fa-info-circle text-secondary mr-2"></i>
+                                账号状态
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <div class="text-sm text-gray-500 mb-1">封禁状态</div>
+                                    <div id="ban-status" class="flex items-center gap-2">
+                                        <span class="status-badge status-active">正常</span>
+                                        <span id="ban-details" class="text-sm">无封禁记录</span>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <div class="text-sm text-gray-500 mb-1">Patreon状态</div>
+                                    <div id="patreon-status" class="flex items-center gap-2">
+                                        <span class="status-badge status-inactive">非赞助者</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- VTC信息 -->
+                        <div id="vtc-section" class="mb-6 hidden">
+                            <h4 class="text-lg font-bold mb-3 flex items-center">
+                                <i class="fa fa-truck text-secondary mr-2"></i>
+                                VTC信息
+                            </h4>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                                        <i class="fa fa-building text-gray-500"></i>
+                                    </div>
+                                    <div>
+                                        <div id="vtc-name" class="font-bold">VTC名称</div>
+                                        <div id="vtc-tag" class="text-sm text-gray-500">[TAG]</div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <div>
+                                        <span class="text-gray-500">成员ID:</span>
+                                        <span id="vtc-member-id" class="ml-1">12345</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">加入时间:</span>
+                                        <span id="vtc-join-date" class="ml-1">2023-01-01</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 最近封禁记录 -->
+                        <div id="bans-section" class="mb-6 hidden">
+                            <h4 class="text-lg font-bold mb-3 flex items-center">
+                                <i class="fa fa-exclamation-circle text-secondary mr-2"></i>
+                                最近封禁记录
+                            </h4>
+                            <div id="bans-list" class="space-y-3">
+                                <!-- 封禁记录将在这里动态生成 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 成就和奖励 -->
+                        <div id="achievements-section">
+                            <h4 class="text-lg font-bold mb-3 flex items-center">
+                                <i class="fa fa-trophy text-secondary mr-2"></i>
+                                成就与奖励
+                            </h4>
+                            <div id="achievements-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                                    <div class="w-10 h-10 mx-auto rounded-full bg-secondary/10 flex items-center justify-center mb-2">
+                                        <i class="fa fa-star text-secondary"></i>
+                                    </div>
+                                    <div class="text-sm font-medium">新手司机</div>
+                                    <div class="text-xs text-gray-500">2023-01-01</div>
+                                </div>
+                                <!-- 更多成就将在这里动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 封禁记录结果 -->
+            <div id="bans-result" class="wechat-card p-6 mb-6 hidden animate-slide-up">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fa fa-exclamation-triangle text-danger mr-2"></i>
+                    <span id="bans-player-name">用户名</span> 的封禁记录
+                </h3>
+                <div id="bans-result-list" class="space-y-4">
+                    <!-- 封禁记录将在这里动态生成 -->
+                </div>
+                <div id="no-bans-message" class="text-center py-8 hidden">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success/10 text-success mb-4">
+                        <i class="fa fa-check-circle text-2xl"></i>
+                    </div>
+                    <p class="text-lg font-medium">未发现任何封禁记录</p>
+                    <p class="text-gray-500 mt-2">该用户目前状态正常，没有任何封禁历史。</p>
+                </div>
+            </div>
+            
+            <!-- VTC信息结果 -->
+            <div id="vtc-result" class="wechat-card p-6 mb-6 hidden animate-slide-up">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-1/3 flex flex-col items-center text-center p-4 border-r border-gray-200/50">
+                        <div class="w-32 h-32 rounded-xl bg-gray-200 flex items-center justify-center mb-4">
+                            <i class="fa fa-building text-5xl text-gray-400"></i>
+                        </div>
+                        <h3 id="vtc-result-name" class="text-2xl font-bold mb-1">VTC名称</h3>
+                        <p id="vtc-result-tag" class="text-lg font-medium text-secondary mb-4">[TAG]</p>
+                        <div class="space-y-3 w-full">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">成立时间:</span>
+                                <span id="vtc-result-created" class="font-medium">2023-01-01</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">成员数量:</span>
+                                <span id="vtc-result-members" class="font-medium">100</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">验证状态:</span>
+                                <span id="vtc-result-verified" class="font-medium text-success">已验证</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 p-4">
+                        <div class="mb-6">
+                            <h4 class="text-lg font-bold mb-3">简介</h4>
+                            <p id="vtc-result-description" class="text-gray-700 bg-gray-50 rounded-xl p-4">
+                                VTC简介内容将显示在这里...
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <h4 class="text-lg font-bold mb-3">联系方式</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa fa-globe text-secondary w-5"></i>
+                                        <a id="vtc-result-website" href="#" class="text-secondary hover:underline">网站链接</a>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa fa-discord text-secondary w-5"></i>
+                                        <span id="vtc-result-discord">Discord链接</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa fa-twitter text-secondary w-5"></i>
+                                        <span id="vtc-result-twitter">Twitter</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold mb-3">统计信息</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">总游戏时间:</span>
+                                        <span id="vtc-result-game-time" class="font-medium">10,000小时</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">总行驶里程:</span>
+                                        <span id="vtc-result-distance" class="font-medium">1,000,000公里</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">活动事件:</span>
+                                        <span id="vtc-result-events" class="font-medium">50次</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-3">最近活动</h4>
+                            <div id="vtc-result-activities" class="space-y-2">
+                                <!-- 活动将在这里动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史记录和收藏 -->
+        <div class="space-y-6">
+            <!-- 历史记录 -->
+            <div class="wechat-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold wechat-text-primary">查询历史</h3>
+                    <button id="clear-history" class="text-sm wechat-text-tertiary hover:text-danger transition-colors">
+                        <i class="fa fa-trash-o mr-1"></i>清空
+                    </button>
+                </div>
+                <div id="history-list" class="space-y-3 max-h-48 overflow-y-auto scrollbar-hide">
+                    <div class="text-center wechat-text-tertiary py-6">
+                        <i class="fa fa-history text-3xl mb-2"></i>
+                        <p>暂无查询记录</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 收藏列表 -->
+            <div class="wechat-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold wechat-text-primary">我的收藏</h3>
+                    <button id="clear-favorites" class="text-sm wechat-text-tertiary hover:text-danger transition-colors">
+                        <i class="fa fa-trash-o mr-1"></i>清空
+                    </button>
+                </div>
+                <div id="favorites-list" class="space-y-3 max-h-48 overflow-y-auto scrollbar-hide">
+                    <div class="text-center wechat-text-tertiary py-6">
+                        <i class="fa fa-star-o text-3xl mb-2"></i>
+                        <p>暂无收藏记录</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="glass-effect mt-8 border-t border-gray-200/20">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-sm text-gray-600">欧卡2 TMP查询工具 - 微信群专用版</p>
+                    <p class="text-xs text-gray-500">数据来源: TruckersMP API</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="https://truckersmp.com" target="_blank" class="text-sm text-gray-600 hover:text-secondary transition-colors">
+                        <i class="fa fa-external-link mr-1"></i>TruckersMP官网
+                    </a>
+                    <a href="https://forum.truckersmp.com" target="_blank" class="text-sm text-gray-600 hover:text-secondary transition-colors">
+                        <i class="fa fa-comments mr-1"></i>论坛
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 帮助模态框 -->
+    <div id="help-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="glass-effect rounded-2xl p-6 max-w-lg w-full mx-4 animate-slide-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">使用帮助</h3>
+                <button id="close-help" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-secondary">如何查询TMP账号？</h4>
+                    <p class="text-gray-700">在查询框中输入TMP用户名、TMP ID或SteamID64，然后点击查询按钮即可获取账号信息。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-secondary">什么是TMP？</h4>
+                    <p class="text-gray-700">TMP是TruckersMP的简称，是欧洲卡车模拟2和美国卡车模拟的多人联机模组，允许玩家在游戏中相互交流和组队运输。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-secondary">如何获取SteamID64？</h4>
+                    <p class="text-gray-700">您可以通过Steam个人资料页面查看，或使用第三方工具如steamid.io来获取。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-secondary">为什么查询不到我的账号？</h4>
+                    <p class="text-gray-700">请确保您已经注册了TruckersMP账号并至少登录过一次游戏。如果问题仍然存在，请检查输入是否正确。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-secondary">关于封禁记录</h4>
+                    <p class="text-gray-700">系统仅显示最近5条封禁记录，且仅当用户未隐藏其封禁记录时才能查看。</p>
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <p class="text-sm text-gray-500 text-center">如有其他问题，请联系微信群管理员。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分享模态框 -->
+    <div id="share-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="glass-effect rounded-2xl p-6 max-w-md w-full mx-4 animate-slide-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">分享查询结果</h3>
+                <button id="close-share" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-gray-700">复制以下链接分享给好友：</p>
+                <div class="relative">
+                    <input id="share-link" type="text" class="input-primary pr-12" readonly>
+                    <button id="copy-link" class="absolute right-2 top-1/2 -translate-y-1/2 text-secondary hover:text-secondary/80">
+                        <i class="fa fa-copy"></i>
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    <button id="share-wechat" class="btn-secondary flex-1">
+                        <i class="fa fa-wechat"></i>
+                        微信分享
+                    </button>
+                    <button id="share-qq" class="btn-secondary flex-1">
+                        <i class="fa fa-qq"></i>
+                        QQ分享
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知提示 -->
+    <div id="notification" class="fixed top-20 right-4 glass-effect rounded-lg px-4 py-3 shadow-lg transform translate-x-full transition-transform duration-300 z-50 flex items-center gap-3 max-w-xs">
+        <div id="notification-icon" class="w-6 h-6 rounded-full flex items-center justify-center">
+            <i id="notification-icon-i" class="fa fa-check text-sm"></i>
+        </div>
+        <div>
+            <p id="notification-title" class="font-medium text-sm">成功</p>
+            <p id="notification-message" class="text-xs text-gray-600">操作已完成</p>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentPlayerData = null;
+        let currentSearchType = 'player';
+        
+        // 微信配置
+        const WECHAT_CONFIG = {
+            appId: 'wx1234567890123456', // 替换为实际的AppID
+            debug: false,
+            jsApiList: [
+                'onMenuShareAppMessage',
+                'onMenuShareTimeline',
+                'showOptionMenu',
+                'hideMenuItems'
+            ]
+        };
+        
+        // DOM元素
+        const searchForm = document.getElementById('search-form');
+        const playerIdInput = document.getElementById('player-id');
+        const searchTypeSelect = document.getElementById('search-type');
+        const resultsContainer = document.getElementById('results-container');
+        const loadingState = document.getElementById('loading-state');
+        const errorState = document.getElementById('error-state');
+        const errorMessage = document.getElementById('error-message');
+        const playerResult = document.getElementById('player-result');
+        const bansResult = document.getElementById('bans-result');
+        const vtcResult = document.getElementById('vtc-result');
+        const historyList = document.getElementById('history-list');
+        const favoritesList = document.getElementById('favorites-list');
+        const clearHistoryBtn = document.getElementById('clear-history');
+        const clearFavoritesBtn = document.getElementById('clear-favorites');
+        const addFavoriteBtn = document.getElementById('add-favorite');
+        const shareResultBtn = document.getElementById('share-result');
+        const helpBtn = document.getElementById('help-btn');
+        const helpModal = document.getElementById('help-modal');
+        const closeHelpBtn = document.getElementById('close-help');
+        const shareModal = document.getElementById('share-modal');
+        const closeShareBtn = document.getElementById('close-share');
+        const shareLinkInput = document.getElementById('share-link');
+        const copyLinkBtn = document.getElementById('copy-link');
+        const shareWechatBtn = document.getElementById('share-wechat');
+        const shareQQBtn = document.getElementById('share-qq');
+        const notification = document.getElementById('notification');
+        const notificationTitle = document.getElementById('notification-title');
+        const notificationMessage = document.getElementById('notification-message');
+        const notificationIcon = document.getElementById('notification-icon');
+        const notificationIconI = document.getElementById('notification-icon-i');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHistory();
+            loadFavorites();
+            setupEventListeners();
+            
+            // 检查URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerId = urlParams.get('player');
+            const searchType = urlParams.get('type') || 'player';
+            
+            if (playerId) {
+                playerIdInput.value = playerId;
+                searchTypeSelect.value = searchType;
+                searchForm.dispatchEvent(new Event('submit'));
+            }
+            
+            // 初始化微信JS-SDK
+            initWechatSDK();
+            
+            // 初始化下拉刷新
+            initPullToRefresh();
+            
+            // 检测是否在微信中打开
+            checkWechatEnvironment();
+        });
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 搜索表单提交
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const playerId = playerIdInput.value.trim();
+                currentSearchType = searchTypeSelect.value;
+                
+                if (playerId) {
+                    searchPlayer(playerId, currentSearchType);
+                }
+            });
+            
+            // 清空历史记录
+            clearHistoryBtn.addEventListener('click', () => {
+                if (confirm('确定要清空所有查询历史吗？')) {
+                    localStorage.removeItem('tmpQueryHistory');
+                    loadHistory();
+                    showNotification('成功', '查询历史已清空', 'success');
+                }
+            });
+            
+            // 清空收藏
+            clearFavoritesBtn.addEventListener('click', () => {
+                if (confirm('确定要清空所有收藏吗？')) {
+                    localStorage.removeItem('tmpQueryFavorites');
+                    loadFavorites();
+                    showNotification('成功', '收藏列表已清空', 'success');
+                }
+            });
+            
+            // 添加到收藏
+            addFavoriteBtn.addEventListener('click', () => {
+                if (currentPlayerData) {
+                    addToFavorites(currentPlayerData);
+                }
+            });
+            
+            // 分享结果
+            shareResultBtn.addEventListener('click', () => {
+                if (currentPlayerData) {
+                    showShareModal(currentPlayerData);
+                }
+            });
+            
+            // 帮助按钮
+            helpBtn.addEventListener('click', () => {
+                helpModal.classList.remove('hidden');
+            });
+            
+            // 关闭帮助模态框
+            closeHelpBtn.addEventListener('click', () => {
+                helpModal.classList.add('hidden');
+            });
+            
+            // 关闭分享模态框
+            closeShareBtn.addEventListener('click', () => {
+                shareModal.classList.add('hidden');
+            });
+            
+            // 复制分享链接
+            copyLinkBtn.addEventListener('click', () => {
+                shareLinkInput.select();
+                document.execCommand('copy');
+                showNotification('成功', '链接已复制到剪贴板', 'success');
+            });
+            
+            // 微信分享
+            shareWechatBtn.addEventListener('click', () => {
+                showNotification('提示', '请使用微信扫描二维码分享', 'info');
+            });
+            
+            // QQ分享
+            shareQQBtn.addEventListener('click', () => {
+                showNotification('提示', 'QQ分享功能暂未开放', 'info');
+            });
+            
+            // 点击模态框背景关闭
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) {
+                    helpModal.classList.add('hidden');
+                }
+            });
+            
+            shareModal.addEventListener('click', (e) => {
+                if (e.target === shareModal) {
+                    shareModal.classList.add('hidden');
+                }
+            });
+            
+            // 微信分享按钮
+            document.getElementById('wechat-share-btn').addEventListener('click', showWechatShareOptions);
+        }
+        
+        // 搜索玩家
+        async function searchPlayer(playerId, searchType) {
+            // 显示加载状态
+            resultsContainer.classList.remove('hidden');
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            playerResult.classList.add('hidden');
+            bansResult.classList.add('hidden');
+            vtcResult.classList.add('hidden');
+            
+            try {
+                // 模拟API请求延迟
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 这里应该是实际的API调用，现在使用模拟数据
+                let data;
+                
+                if (searchType === 'player') {
+                    data = await getPlayerData(playerId);
+                    currentPlayerData = data;
+                    displayPlayerResult(data);
+                    addToHistory(data);
+                } else if (searchType === 'bans') {
+                    data = await getPlayerBans(playerId);
+                    displayBansResult(data);
+                    addToHistory({ id: playerId, name: data.name || playerId, type: 'bans' });
+                } else if (searchType === 'vtc') {
+                    data = await getPlayerVTC(playerId);
+                    displayVTCResult(data);
+                    addToHistory({ id: playerId, name: data.name || playerId, type: 'vtc' });
+                }
+            } catch (error) {
+                console.error('搜索错误:', error);
+                displayError(error.message || '查询失败，请稍后重试');
+            } finally {
+                loadingState.classList.add('hidden');
+            }
+        }
+        
+        // 获取玩家数据（模拟API调用）
+        async function getPlayerData(playerId) {
+            // 模拟API响应数据
+            // 实际应用中应该调用: https://api.truckersmp.com/v2/player/{id}
+            
+            // 模拟不同的玩家数据
+            const mockPlayers = {
+                '123456': {
+                    id: 123456,
+                    name: 'TruckDriver001',
+                    avatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                    smallAvatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                    joinDate: '2023-01-15T10:30:00Z',
+                    steamID64: '76561198000000001',
+                    steamID: 'STEAM_0:1:12345678',
+                    discordSnowflake: null,
+                    displayVTCHistory: true,
+                    groupName: 'Truckers',
+                    groupColor: '#FF6B00',
+                    groupID: 1,
+                    banned: false,
+                    bannedUntil: null,
+                    bansCount: 0,
+                    displayBans: true,
+                    patreon: {
+                        isPatron: false,
+                        active: false,
+                        color: null,
+                        tierID: null,
+                        currentPledge: null,
+                        lifetimePledge: null,
+                        nextPledge: null,
+                        hidden: false
+                    },
+                    permissions: {
+                        isStaff: false,
+                        isUpperStaff: false,
+                        isGameAdmin: false,
+                        showDetailedOnWebMaps: false
+                    },
+                    vtc: {
+                        id: 123,
+                        name: 'European Truckers',
+                        tag: 'ET',
+                        inVTC: true,
+                        memberID: 4567
+                    },
+                    vtcHistory: [
+                        {
+                            id: 123,
+                            name: 'European Truckers',
+                            verified: true,
+                            joinDate: '2023-02-01T08:00:00Z',
+                            leftDate: null
+                        }
+                    ],
+                    achievements: [
+                        {
+                            id: 1,
+                            title: '新手司机',
+                            description: '完成首次运输',
+                            imageUrl: 'https://via.placeholder.com/50',
+                            achievedAt: '2023-01-16T14:20:00Z'
+                        },
+                        {
+                            id: 2,
+                            title: '长途运输',
+                            description: '完成1000公里以上的运输',
+                            imageUrl: 'https://via.placeholder.com/50',
+                            achievedAt: '2023-03-10T09:45:00Z'
+                        }
+                    ],
+                    awards: []
+                },
+                '654321': {
+                    id: 654321,
+                    name: 'SpeedDemon',
+                    avatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                    smallAvatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                    joinDate: '2022-11-20T16:45:00Z',
+                    steamID64: '76561198000000002',
+                    steamID: 'STEAM_0:0:87654321',
+                    discordSnowflake: '123456789012345678',
+                    displayVTCHistory: true,
+                    groupName: 'Speed Demons',
+                    groupColor: '#FF0000',
+                    groupID: 2,
+                    banned: true,
+                    bannedUntil: '2025-12-31T23:59:59Z',
+                    bansCount: 2,
+                    displayBans: true,
+                    patreon: {
+                        isPatron: true,
+                        active: true,
+                        color: '#FFD700',
+                        tierID: 2,
+                        currentPledge: 500,
+                        lifetimePledge: 6000,
+                        nextPledge: 500,
+                        hidden: false
+                    },
+                    permissions: {
+                        isStaff: false,
+                        isUpperStaff: false,
+                        isGameAdmin: false,
+                        showDetailedOnWebMaps: false
+                    },
+                    vtc: {
+                        id: 0,
+                        name: '',
+                        tag: '',
+                        inVTC: false,
+                        memberID: 0
+                    },
+                    vtcHistory: [],
+                    achievements: [
+                        {
+                            id: 3,
+                            title: '速度之王',
+                            description: '达到最高速度限制',
+                            imageUrl: 'https://via.placeholder.com/50',
+                            achievedAt: '2022-12-05T18:30:00Z'
+                        }
+                    ],
+                    awards: []
+                }
+            };
+            
+            // 检查是否有模拟数据
+            if (mockPlayers[playerId]) {
+                return mockPlayers[playerId];
+            }
+            
+            // 如果是数字ID但没有模拟数据，返回一个通用的模拟数据
+            if (!isNaN(playerId)) {
+                return {
+                    id: parseInt(playerId),
+                    name: `Player${playerId}`,
+                    avatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                    smallAvatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                    joinDate: '2023-06-01T00:00:00Z',
+                    steamID64: `765611980000${playerId}`,
+                    steamID: `STEAM_0:0:${playerId}`,
+                    discordSnowflake: null,
+                    displayVTCHistory: true,
+                    groupName: 'Players',
+                    groupColor: '#0000FF',
+                    groupID: 3,
+                    banned: false,
+                    bannedUntil: null,
+                    bansCount: 0,
+                    displayBans: true,
+                    patreon: {
+                        isPatron: false,
+                        active: false,
+                        color: null,
+                        tierID: null,
+                        currentPledge: null,
+                        lifetimePledge: null,
+                        nextPledge: null,
+                        hidden: false
+                    },
+                    permissions: {
+                        isStaff: false,
+                        isUpperStaff: false,
+                        isGameAdmin: false,
+                        showDetailedOnWebMaps: false
+                    },
+                    vtc: {
+                        id: 0,
+                        name: '',
+                        tag: '',
+                        inVTC: false,
+                        memberID: 0
+                    },
+                    vtcHistory: [],
+                    achievements: [],
+                    awards: []
+                };
+            }
+            
+            // 如果是用户名，返回一个基于用户名的模拟数据
+            return {
+                id: Math.floor(Math.random() * 1000000),
+                name: playerId,
+                avatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                smallAvatar: 'https://p11-doubao-search-sign.byteimg.com/labis/3a2f7fb8efc0fe0a3c972bd28d5380b8~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1782565122&x-signature=Z5lA2AaH44sBF2fe7Axu5UZs3jQ%3D',
+                joinDate: '2023-01-01T00:00:00Z',
+                steamID64: '76561198000000000',
+                steamID: 'STEAM_0:0:12345678',
+                discordSnowflake: null,
+                displayVTCHistory: true,
+                groupName: 'Players',
+                groupColor: '#0000FF',
+                groupID: 3,
+                banned: false,
+                bannedUntil: null,
+                bansCount: 0,
+                displayBans: true,
+                patreon: {
+                    isPatron: false,
+                    active: false,
+                    color: null,
+                    tierID: null,
+                    currentPledge: null,
+                    lifetimePledge: null,
+                    nextPledge: null,
+                    hidden: false
+                },
+                permissions: {
+                    isStaff: false,
+                    isUpperStaff: false,
+                    isGameAdmin: false,
+                    showDetailedOnWebMaps: false
+                },
+                vtc: {
+                    id: 0,
+                    name: '',
+                    tag: '',
+                    inVTC: false,
+                    memberID: 0
+                },
+                vtcHistory: [],
+                achievements: [],
+                awards: []
+            };
+        }
+        
+        // 获取玩家封禁记录（模拟API调用）
+        async function getPlayerBans(playerId) {
+            // 模拟API响应数据
+            // 实际应用中应该调用: https://api.truckersmp.com/v2/bans/{id}
+            
+            // 模拟不同的封禁记录
+            const mockBans = {
+                '654321': {
+                    name: 'SpeedDemon',
+                    bans: [
+                        {
+                            expiration: '2025-12-31T23:59:59Z',
+                            timeAdded: '2025-07-20T14:30:00Z',
+                            active: true,
+                            reason: '超速行驶',
+                            adminName: 'Admin001',
+                            adminID: 123
+                        },
+                        {
+                            expiration: '2025-01-15T23:59:59Z',
+                            timeAdded: '2024-12-15T09:15:00Z',
+                            active: false,
+                            reason: '违反交通规则',
+                            adminName: 'Admin002',
+                            adminID: 124
+                        }
+                    ]
+                }
+            };
+            
+            // 检查是否有模拟数据
+            if (mockBans[playerId]) {
+                return mockBans[playerId];
+            }
+            
+            // 如果是数字ID但没有模拟数据，返回空封禁记录
+            if (!isNaN(playerId)) {
+                return {
+                    name: `Player${playerId}`,
+                    bans: []
+                };
+            }
+            
+            // 如果是用户名，返回空封禁记录
+            return {
+                name: playerId,
+                bans: []
+            };
+        }
+        
+        // 获取玩家VTC信息（模拟API调用）
+        async function getPlayerVTC(playerId) {
+            // 模拟API响应数据
+            // 实际应用中应该调用玩家API然后获取VTC信息
+            
+            // 模拟不同的VTC信息
+            const mockVTCs = {
+                '123456': {
+                    name: 'TruckDriver001',
+                    vtc: {
+                        id: 123,
+                        name: 'European Truckers',
+                        tag: 'ET',
+                        verified: true,
+                        members: 150,
+                        created: '2022-01-01T00:00:00Z',
+                        description: '欧洲卡车司机联盟，专注于模拟真实运输体验。',
+                        website: 'https://europeantruckers.com',
+                        discord: 'https://discord.gg/europeantruckers',
+                        twitter: '@europeantruckers',
+                        gameTime: '15000',
+                        distance: '1500000',
+                        events: 25,
+                        activities: [
+                            {
+                                type: 'event',
+                                title: '欧洲长途运输',
+                                date: '2025-07-15T18:00:00Z'
+                            },
+                            {
+                                type: 'recruitment',
+                                title: '招募新成员',
+                                date: '2025-07-10T10:00:00Z'
+                            }
+                        ]
+                    }
+                }
+            };
+            
+            // 检查是否有模拟数据
+            if (mockVTCs[playerId]) {
+                return mockVTCs[playerId];
+            }
+            
+            // 如果是数字ID但没有模拟数据，返回无VTC信息
+            if (!isNaN(playerId)) {
+                return {
+                    name: `Player${playerId}`,
+                    vtc: null
+                };
+            }
+            
+            // 如果是用户名，返回无VTC信息
+            return {
+                name: playerId,
+                vtc: null
+            };
+        }
+        
+        // 显示玩家结果
+        function displayPlayerResult(data) {
+            // 设置基本信息
+            document.getElementById('player-avatar').src = data.avatar || 'https://via.placeholder.com/150';
+            document.getElementById('player-name').textContent = data.name;
+            document.getElementById('player-id-display').textContent = `TMP ID: ${data.id}`;
+            document.getElementById('player-join-date').textContent = formatDate(data.joinDate);
+            document.getElementById('player-steamid').textContent = data.steamID64;
+            document.getElementById('player-group').textContent = data.groupName || '无';
+            
+            // 设置状态
+            const playerStatus = document.getElementById('player-status');
+            const banStatus = document.getElementById('ban-status');
+            const banDetails = document.getElementById('ban-details');
+            
+            if (data.banned) {
+                playerStatus.textContent = '封禁';
+                playerStatus.className = 'status-badge status-banned';
+                
+                banStatus.innerHTML = '<span class="status-badge status-banned">已封禁</span>';
+                banDetails.textContent = `封禁至: ${formatDate(data.bannedUntil)}`;
+                banDetails.className = 'text-sm text-danger';
+            } else {
+                playerStatus.textContent = '活跃';
+                playerStatus.className = 'status-badge status-active';
+                
+                banStatus.innerHTML = '<span class="status-badge status-active">正常</span>';
+                banDetails.textContent = data.bansCount > 0 ? `有 ${data.bansCount} 条历史封禁记录` : '无封禁记录';
+                banDetails.className = 'text-sm';
+            }
+            
+            // 设置Patreon状态
+            const patreonStatus = document.getElementById('patreon-status');
+            if (data.patreon.isPatron && data.patreon.active) {
+                patreonStatus.innerHTML = `<span class="status-badge" style="background-color: ${data.patreon.color}20; color: ${data.patreon.color};">Patreon赞助者</span>`;
+            } else {
+                patreonStatus.innerHTML = '<span class="status-badge status-inactive">非赞助者</span>';
+            }
+            
+            // 设置VTC信息
+            const vtcSection = document.getElementById('vtc-section');
+            if (data.vtc && data.vtc.inVTC) {
+                document.getElementById('vtc-name').textContent = data.vtc.name;
+                document.getElementById('vtc-tag').textContent = `[${data.vtc.tag}]`;
+                document.getElementById('vtc-member-id').textContent = data.vtc.memberID;
+                
+                // 查找加入日期
+                let joinDate = '未知';
+                if (data.vtcHistory && data.vtcHistory.length > 0) {
+                    const currentVTC = data.vtcHistory.find(vtc => vtc.id === data.vtc.id && !vtc.leftDate);
+                    if (currentVTC) {
+                        joinDate = formatDate(currentVTC.joinDate);
+                    }
+                }
+                document.getElementById('vtc-join-date').textContent = joinDate;
+                
+                vtcSection.classList.remove('hidden');
+            } else {
+                vtcSection.classList.add('hidden');
+            }
+            
+            // 设置封禁记录
+            const bansSection = document.getElementById('bans-section');
+            const bansList = document.getElementById('bans-list');
+            
+            if (data.bansCount > 0 && data.displayBans) {
+                // 这里应该获取详细的封禁记录，现在只显示数量
+                bansList.innerHTML = `
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">历史封禁记录</span>
+                            <span class="text-danger">${data.bansCount} 条</span>
+                        </div>
+                        <p class="text-sm text-gray-600">显示最近5条封禁记录，请点击"封禁记录"标签查看详情。</p>
+                    </div>
+                `;
+                bansSection.classList.remove('hidden');
+            } else {
+                bansSection.classList.add('hidden');
+            }
+            
+            // 设置成就和奖励
+            const achievementsList = document.getElementById('achievements-list');
+            if (data.achievements && data.achievements.length > 0) {
+                achievementsList.innerHTML = data.achievements.map(achievement => `
+                    <div class="bg-gray-50 rounded-xl p-3 text-center">
+                        <div class="w-10 h-10 mx-auto rounded-full bg-secondary/10 flex items-center justify-center mb-2">
+                            <i class="fa fa-trophy text-secondary"></i>
+                        </div>
+                        <div class="text-sm font-medium">${achievement.title}</div>
+                        <div class="text-xs text-gray-500">${formatDate(achievement.achievedAt)}</div>
+                    </div>
+                `).join('');
+            } else {
+                achievementsList.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <i class="fa fa-trophy text-3xl text-gray-300 mb-2"></i>
+                        <p class="text-gray-500">暂无成就记录</p>
+                    </div>
+                `;
+            }
+            
+            // 显示结果
+            playerResult.classList.remove('hidden');
+        }
+        
+        // 显示封禁记录结果
+        function displayBansResult(data) {
+            document.getElementById('bans-player-name').textContent = data.name;
+            
+            const bansResultList = document.getElementById('bans-result-list');
+            const noBansMessage = document.getElementById('no-bans-message');
+            
+            if (data.bans && data.bans.length > 0) {
+                bansResultList.innerHTML = data.bans.map(ban => `
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">${ban.reason}</span>
+                            <span class="status-badge ${ban.active ? 'status-banned' : 'status-inactive'}">${ban.active ? '当前封禁' : '已过期'}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-sm mb-2">
+                            <div>
+                                <span class="text-gray-500">管理员:</span>
+                                <span class="ml-1">${ban.adminName}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">封禁时间:</span>
+                                <span class="ml-1">${formatDate(ban.timeAdded)}</span>
+                            </div>
+                        </div>
+                        <div class="text-sm">
+                            <span class="text-gray-500">到期时间:</span>
+                            <span class="ml-1 ${ban.expiration ? '' : 'text-danger font-medium'}">${ban.expiration ? formatDate(ban.expiration) : '永久封禁'}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                bansResultList.classList.remove('hidden');
+                noBansMessage.classList.add('hidden');
+            } else {
+                bansResultList.classList.add('hidden');
+                noBansMessage.classList.remove('hidden');
+            }
+            
+            bansResult.classList.remove('hidden');
+        }
+        
+        // 显示VTC信息结果
+        function displayVTCResult(data) {
+            const vtcResultSection = document.getElementById('vtc-result');
+            
+            if (data.vtc) {
+                document.getElementById('vtc-result-name').textContent = data.vtc.name;
+                document.getElementById('vtc-result-tag').textContent = `[${data.vtc.tag}]`;
+                document.getElementById('vtc-result-created').textContent = formatDate(data.vtc.created);
+                document.getElementById('vtc-result-members').textContent = data.vtc.members;
+                document.getElementById('vtc-result-verified').textContent = data.vtc.verified ? '已验证' : '未验证';
+                document.getElementById('vtc-result-verified').className = data.vtc.verified ? 'font-medium text-success' : 'font-medium text-warning';
+                
+                document.getElementById('vtc-result-description').textContent = data.vtc.description || '该VTC暂无简介';
+                
+                document.getElementById('vtc-result-website').href = data.vtc.website || '#';
+                document.getElementById('vtc-result-website').textContent = data.vtc.website ? '官方网站' : '无网站';
+                document.getElementById('vtc-result-discord').textContent = data.vtc.discord || '无Discord';
+                document.getElementById('vtc-result-twitter').textContent = data.vtc.twitter || '无Twitter';
+                
+                document.getElementById('vtc-result-game-time').textContent = `${data.vtc.gameTime}小时`;
+                document.getElementById('vtc-result-distance').textContent = `${data.vtc.distance}公里`;
+                document.getElementById('vtc-result-events').textContent = `${data.vtc.events}次`;
+                
+                const activitiesList = document.getElementById('vtc-result-activities');
+                if (data.vtc.activities && data.vtc.activities.length > 0) {
+                    activitiesList.innerHTML = data.vtc.activities.map(activity => `
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="fa ${activity.type === 'event' ? 'fa-calendar' : 'fa-users'} text-secondary w-5"></i>
+                            <span>${activity.title}</span>
+                            <span class="ml-auto text-gray-500">${formatDate(activity.date)}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    activitiesList.innerHTML = `
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">暂无活动记录</p>
+                        </div>
+                    `;
+                }
+                
+                vtcResultSection.classList.remove('hidden');
+            } else {
+                vtcResultSection.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-4">
+                            <i class="fa fa-building text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">未加入VTC</h3>
+                        <p class="text-gray-600">${data.name} 目前未加入任何VTC团队。</p>
+                    </div>
+                `;
+                vtcResultSection.classList.remove('hidden');
+            }
+        }
+        
+        // 显示错误信息
+        function displayError(message) {
+            errorMessage.textContent = message;
+            errorState.classList.remove('hidden');
+        }
+        
+        // 添加到历史记录
+        function addToHistory(data) {
+            let history = JSON.parse(localStorage.getItem('tmpQueryHistory') || '[]');
+            
+            // 检查是否已存在相同的记录
+            const existingIndex = history.findIndex(item => item.id === data.id && item.type === currentSearchType);
+            if (existingIndex !== -1) {
+                // 如果存在，移除旧记录
+                history.splice(existingIndex, 1);
+            }
+            
+            // 添加新记录到开头
+            history.unshift({
+                id: data.id,
+                name: data.name,
+                type: currentSearchType,
+                timestamp: new Date().toISOString()
+            });
+            
+            // 限制历史记录数量
+            if (history.length > 10) {
+                history = history.slice(0, 10);
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('tmpQueryHistory', JSON.stringify(history));
+            
+            // 更新历史记录显示
+            loadHistory();
+        }
+        
+        // 加载历史记录
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('tmpQueryHistory') || '[]');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fa fa-history text-3xl mb-2"></i>
+                        <p>暂无查询记录</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyList.innerHTML = history.map(item => `
+                <div class="bg-gray-50 rounded-lg p-3 card-hover cursor-pointer" onclick="searchHistoryItem(${item.id}, '${item.type}')">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-medium">${item.name}</div>
+                            <div class="text-xs text-gray-500">${formatDate(item.timestamp)} · ${getTypeText(item.type)}</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs px-2 py-1 rounded-full bg-secondary/10 text-secondary">${item.id}</span>
+                            <i class="fa fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 搜索历史记录项
+        function searchHistoryItem(id, type) {
+            playerIdInput.value = id;
+            searchTypeSelect.value = type;
+            searchForm.dispatchEvent(new Event('submit'));
+        }
+        
+        // 添加到收藏
+        function addToFavorites(data) {
+            let favorites = JSON.parse(localStorage.getItem('tmpQueryFavorites') || '[]');
+            
+            // 检查是否已存在
+            if (favorites.some(item => item.id === data.id)) {
+                showNotification('提示', '该用户已在收藏列表中', 'info');
+                return;
+            }
+            
+            // 添加到收藏
+            favorites.push({
+                id: data.id,
+                name: data.name,
+                avatar: data.avatar,
+                banned: data.banned,
+                vtc: data.vtc && data.vtc.inVTC ? data.vtc.name : null,
+                vtcTag: data.vtc && data.vtc.inVTC ? data.vtc.tag : null
+            });
+            
+            // 保存到本地存储
+            localStorage.setItem('tmpQueryFavorites', JSON.stringify(favorites));
+            
+            // 更新收藏列表显示
+            loadFavorites();
+            
+            showNotification('成功', '已添加到收藏列表', 'success');
+        }
+        
+        // 加载收藏列表
+        function loadFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('tmpQueryFavorites') || '[]');
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fa fa-star-o text-3xl mb-2"></i>
+                        <p>暂无收藏记录</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            favoritesList.innerHTML = favorites.map(item => `
+                <div class="bg-gray-50 rounded-lg p-3 card-hover cursor-pointer" onclick="searchHistoryItem(${item.id}, 'player')">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.avatar || 'https://via.placeholder.com/40'}" alt="${item.name}" class="w-10 h-10 rounded-full object-cover">
+                        <div class="flex-1">
+                            <div class="font-medium flex items-center gap-2">
+                                ${item.name}
+                                ${item.banned ? '<span class="status-badge status-banned text-xs">已封禁</span>' : ''}
+                            </div>
+                            ${item.vtc ? `<div class="text-xs text-gray-500">${item.vtc} [${item.vtcTag}]</div>` : ''}
+                        </div>
+                        <button class="text-gray-400 hover:text-danger" onclick="event.stopPropagation(); removeFavorite(${item.id})">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 移除收藏
+        function removeFavorite(id) {
+            let favorites = JSON.parse(localStorage.getItem('tmpQueryFavorites') || '[]');
+            favorites = favorites.filter(item => item.id !== id);
+            localStorage.setItem('tmpQueryFavorites', JSON.stringify(favorites));
+            loadFavorites();
+            showNotification('成功', '已从收藏列表中移除', 'success');
+        }
+        
+        // 显示分享模态框
+        function showShareModal(data) {
+            const shareUrl = `${window.location.origin}${window.location.pathname}?player=${data.id}&type=player`;
+            shareLinkInput.value = shareUrl;
+            shareModal.classList.remove('hidden');
+        }
+        
+        // 显示通知
+        function showNotification(title, message, type = 'success') {
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // 设置图标和颜色
+            if (type === 'success') {
+                notificationIcon.className = 'w-6 h-6 rounded-full bg-success/20 text-success flex items-center justify-center';
+                notificationIconI.className = 'fa fa-check text-sm';
+            } else if (type === 'error') {
+                notificationIcon.className = 'w-6 h-6 rounded-full bg-danger/20 text-danger flex items-center justify-center';
+                notificationIconI.className = 'fa fa-times text-sm';
+            } else if (type === 'info') {
+                notificationIcon.className = 'w-6 h-6 rounded-full bg-info/20 text-info flex items-center justify-center';
+                notificationIconI.className = 'fa fa-info text-sm';
+            }
+            
+            // 显示通知
+            notification.classList.remove('translate-x-full');
+            
+            // 3秒后隐藏
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 3000);
+        }
+        
+        // 切换主题
+        function toggleTheme() {
+            const body = document.body;
+            const icon = themeToggleBtn.querySelector('i');
+            
+            if (body.classList.contains('bg-gradient-to-br')) {
+                // 切换到深色模式
+                body.classList.remove('bg-gradient-to-br', 'from-primary', 'to-neutral-dark', 'text-gray-800');
+                body.classList.add('bg-gray-900', 'text-white');
+                
+                icon.classList.remove('fa-moon-o');
+                icon.classList.add('fa-sun-o');
+            } else {
+                // 切换到浅色模式
+                body.classList.remove('bg-gray-900', 'text-white');
+                body.classList.add('bg-gradient-to-br', 'from-primary', 'to-neutral-dark', 'text-gray-800');
+                
+                icon.classList.remove('fa-sun-o');
+                icon.classList.add('fa-moon-o');
+            }
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '未知';
+            
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+        
+        // 获取类型文本
+        function getTypeText(type) {
+            switch (type) {
+                case 'player': return '账号信息';
+                case 'bans': return '封禁记录';
+                case 'vtc': return 'VTC信息';
+                default: return '未知';
+            }
+        }
+        
+        // ==================== 微信相关功能 ====================
+        
+        // 初始化微信JS-SDK
+        function initWechatSDK() {
+            // 检查是否存在wx对象
+            if (typeof wx === 'undefined') {
+                console.log('微信JS-SDK未加载');
+                // 如果不在微信环境中，动态加载微信JS-SDK
+                if (isWechatBrowser()) {
+                    loadWechatSDK();
+                }
+                return;
+            }
+            
+            // 这里应该从服务器获取签名等信息
+            // 现在使用模拟数据
+            const timestamp = Math.floor(Date.now() / 1000);
+            const nonceStr = 'tmpquery' + timestamp;
+            const signature = 'mockSignature' + timestamp;
+            
+            wx.config({
+                debug: WECHAT_CONFIG.debug,
+                appId: WECHAT_CONFIG.appId,
+                timestamp: timestamp,
+                nonceStr: nonceStr,
+                signature: signature,
+                jsApiList: WECHAT_CONFIG.jsApiList
+            });
+            
+            wx.ready(function() {
+                console.log('微信JS-SDK初始化成功');
+                updateWechatShareData();
+            });
+            
+            wx.error(function(res) {
+                console.error('微信JS-SDK初始化失败:', res);
+            });
+        }
+        
+        // 加载微信JS-SDK
+        function loadWechatSDK() {
+            const script = document.createElement('script');
+            script.src = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js';
+            script.onload = function() {
+                console.log('微信JS-SDK加载成功');
+                initWechatSDK();
+            };
+            script.onerror = function() {
+                console.error('微信JS-SDK加载失败');
+            };
+            document.head.appendChild(script);
+        }
+        
+        // 检测是否在微信浏览器中
+        function isWechatBrowser() {
+            return /MicroMessenger/i.test(navigator.userAgent);
+        }
+        
+        // 检查微信环境并显示提示
+        function checkWechatEnvironment() {
+            if (isWechatBrowser()) {
+                console.log('在微信浏览器中打开');
+                // 可以在这里添加微信特定的提示或功能
+            } else {
+                console.log('不在微信浏览器中打开');
+                // 显示非微信环境提示
+                const wechatTip = document.createElement('div');
+                wechatTip.className = 'bg-warning/10 border border-warning/20 rounded-lg p-4 mb-6 flex items-center gap-3';
+                wechatTip.innerHTML = `
+                    <i class="fa fa-exclamation-triangle text-warning text-xl"></i>
+                    <div>
+                        <p class="wechat-text-primary font-medium">建议在微信中打开以获得最佳体验</p>
+                        <p class="wechat-text-secondary text-sm">部分功能可能受限，请使用微信扫描二维码访问</p>
+                    </div>
+                `;
+                const mainContent = document.querySelector('main');
+                mainContent.insertBefore(wechatTip, mainContent.firstChild);
+            }
+        }
+        
+        // 更新微信分享数据
+        function updateWechatShareData(data = null) {
+            if (typeof wx === 'undefined') return;
+            
+            const shareData = {
+                title: '欧卡2 TMP查询工具',
+                desc: '快速查询TMP账号状态和封禁记录',
+                link: window.location.href,
+                imgUrl: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D',
+                type: 'link',
+                dataUrl: '',
+                success: function() {
+                    showNotification('分享成功', '感谢您的分享！', 'success');
+                },
+                cancel: function() {
+                    // 用户取消分享
+                }
+            };
+            
+            // 如果有具体的查询数据，使用更详细的分享内容
+            if (data) {
+                shareData.title = `TMP账号查询结果: ${data.name}`;
+                shareData.desc = `状态: ${data.banned ? '已封禁' : '正常'} | 加入时间: ${formatDate(data.joinDate)}`;
+            }
+            
+            // 设置分享给朋友
+            wx.onMenuShareAppMessage(shareData);
+            
+            // 设置分享到朋友圈
+            wx.onMenuShareTimeline({
+                title: shareData.title,
+                link: shareData.link,
+                imgUrl: shareData.imgUrl,
+                success: shareData.success,
+                cancel: shareData.cancel
+            });
+        }
+        
+        // 显示微信分享选项
+        function showWechatShareOptions() {
+            if (!isWechatBrowser()) {
+                showNotification('提示', '请在微信中打开以使用分享功能', 'info');
+                return;
+            }
+            
+            if (currentPlayerData) {
+                updateWechatShareData(currentPlayerData);
+            }
+            
+            // 显示系统分享菜单
+            if (typeof wx !== 'undefined') {
+                wx.showOptionMenu();
+            } else {
+                showNotification('提示', '微信分享功能加载中，请稍后再试', 'info');
+            }
+        }
+        
+        // 初始化下拉刷新
+        function initPullToRefresh() {
+            let startY = 0;
+            let pullDistance = 0;
+            const threshold = 80; // 下拉阈值
+            const pullIndicator = document.createElement('div');
+            pullIndicator.id = 'pull-indicator';
+            pullIndicator.className = 'fixed top-0 left-0 right-0 h-16 flex items-center justify-center z-50 transition-transform -translate-y-full';
+            pullIndicator.innerHTML = `
+                <div class="flex flex-col items-center">
+                    <div id="pull-spinner" class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full mb-1 hidden"></div>
+                    <span id="pull-text" class="text-sm text-primary">下拉刷新</span>
+                </div>
+            `;
+            document.body.appendChild(pullIndicator);
+            
+            const spinner = document.getElementById('pull-spinner');
+            const pullText = document.getElementById('pull-text');
+            
+            document.addEventListener('touchstart', function(e) {
+                if (window.scrollY === 0) {
+                    startY = e.touches[0].clientY;
+                }
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (window.scrollY === 0 && e.touches[0].clientY > startY) {
+                    pullDistance = e.touches[0].clientY - startY;
+                    if (pullDistance > 0) {
+                        e.preventDefault();
+                        const translateY = Math.min(pullDistance * 0.5, threshold);
+                        pullIndicator.style.transform = `translateY(${translateY}px)`;
+                        
+                        if (translateY > threshold * 0.8) {
+                            pullText.textContent = '松开刷新';
+                            spinner.classList.remove('hidden');
+                            spinner.style.animation = 'spin 1s linear infinite';
+                        } else {
+                            pullText.textContent = '下拉刷新';
+                            spinner.classList.add('hidden');
+                            spinner.style.animation = 'none';
+                        }
+                    }
+                }
+            });
+            
+            document.addEventListener('touchend', function() {
+                if (pullDistance > threshold * 0.8) {
+                    // 执行刷新
+                    pullText.textContent = '刷新中...';
+                    refreshPage();
+                }
+                
+                // 重置下拉状态
+                pullIndicator.style.transform = 'translateY(-100%)';
+                pullDistance = 0;
+                setTimeout(() => {
+                    pullText.textContent = '下拉刷新';
+                    spinner.classList.add('hidden');
+                    spinner.style.animation = 'none';
+                }, 300);
+            });
+        }
+        
+        // 刷新页面
+        function refreshPage() {
+            // 重新加载当前查询
+            if (playerIdInput.value) {
+                searchForm.dispatchEvent(new Event('submit'));
+            } else {
+                window.location.reload();
+            }
+        }
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

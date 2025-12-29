@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欧卡2 TMP查询工具 - 微信快速上手指南</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07C160',      // 微信绿色
+                        secondary: '#07AD5B',    // 深绿色
+                        accent: '#06BB64',       // 亮绿色
+                        neutral: '#F7F7F7',      // 浅灰色背景
+                        'neutral-dark': '#F2F2F2', // 深色背景
+                        'wechat-gray': '#333333', // 微信深灰文字
+                        'wechat-gray-light': '#666666', // 微信中灰文字
+                        'wechat-gray-lighter': '#999999', // 微信浅灰文字
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .wechat-card {
+                @apply bg-white rounded-xl shadow-sm border border-gray-100;
+            }
+            .wechat-text-primary {
+                @apply text-wechat-gray;
+            }
+            .wechat-text-secondary {
+                @apply text-wechat-gray-light;
+            }
+            .wechat-text-tertiary {
+                @apply text-wechat-gray-lighter;
+            }
+            .step-number {
+                @apply w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm;
+            }
+            .highlight {
+                @apply bg-primary/10 text-primary font-medium;
+            }
+            .screenshot {
+                @apply border-2 border-gray-200 rounded-lg shadow-md;
+            }
+            .screenshot-frame {
+                @apply border-8 border-gray-800 rounded-3xl overflow-hidden shadow-xl mx-auto;
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral min-h-screen text-wechat-gray">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D" alt="欧卡2 Logo" class="h-10 w-10 rounded-lg object-cover">
+                <div>
+                    <h1 class="text-xl font-bold">微信快速上手指南</h1>
+                    <p class="text-xs text-white/80">欧卡2 TMP查询工具</p>
+                </div>
+            </div>
+            <a href="index.html" class="text-white hover:text-white/80 transition-colors">
+                <i class="fa fa-arrow-left"></i> 返回工具
+            </a>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 欢迎卡片 -->
+        <div class="wechat-card p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="w-32 h-32 flex-shrink-0">
+                    <div class="w-full h-full bg-primary/10 rounded-2xl flex items-center justify-center">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4c6f4d4b2617430490899aee12a95913~tplv-a9rns2rl98-image.image?rcl=202512292118111735709F5FC60CA1D9D9&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769606307&x-signature=sIF9T3%2B3d0Ta0DkvIx7xoNF%2BXDA%3D" alt="TMP查询工具二维码" class="w-24 h-24 object-contain">
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-xl font-bold mb-2 wechat-text-primary">欢迎使用欧卡2 TMP查询工具</h2>
+                    <p class="wechat-text-secondary mb-4">
+                        本指南将教您如何在微信中快速使用TMP查询工具，无需安装任何应用，直接在微信中查询欧卡2 TMP账号信息！
+                    </p>
+                    <div class="bg-primary/10 border border-primary/20 rounded-lg p-3 flex items-center gap-2">
+                        <i class="fa fa-lightbulb-o text-primary"></i>
+                        <p class="text-sm wechat-text-primary">
+                            只需3步，轻松查询TMP账号信息！
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 目录导航 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">目录</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="#method-1" class="border border-gray-200 rounded-lg p-4 hover:border-primary hover:bg-primary/5 transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                            <i class="fa fa-qrcode text-primary"></i>
+                        </div>
+                        <h4 class="font-medium wechat-text-primary">方法一：扫码使用</h4>
+                    </div>
+                    <p class="text-sm wechat-text-secondary">
+                        扫描二维码直接打开工具
+                    </p>
+                </a>
+                <a href="#method-2" class="border border-gray-200 rounded-lg p-4 hover:border-primary hover:bg-primary/5 transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                            <i class="fa fa-link text-primary"></i>
+                        </div>
+                        <h4 class="font-medium wechat-text-primary">方法二：链接访问</h4>
+                    </div>
+                    <p class="text-sm wechat-text-secondary">
+                        点击分享链接打开工具
+                    </p>
+                </a>
+                <a href="#method-3" class="border border-gray-200 rounded-lg p-4 hover:border-primary hover:bg-primary/5 transition-colors">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                            <i class="fa fa-comment text-primary"></i>
+                        </div>
+                        <h4 class="font-medium wechat-text-primary">方法三：机器人查询</h4>
+                    </div>
+                    <p class="text-sm wechat-text-secondary">
+                        在微信群中使用机器人查询
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <!-- 方法一：扫码使用 -->
+        <div id="method-1" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-6 wechat-text-primary flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">1</div>
+                方法一：扫码使用
+            </h3>
+            
+            <div class="space-y-8">
+                <!-- 步骤1 -->
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">1</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">打开微信扫一扫</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            打开微信，点击右上角的 <span class="highlight">"+"</span> 按钮，然后选择 <span class="highlight">"扫一扫"</span>。
+                        </p>
+                        <div class="bg-gray-100 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-info-circle text-primary mr-1"></i>
+                                提示：确保您的手机摄像头可以正常使用。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="text-lg font-bold">微信</div>
+                                    <div class="flex gap-3">
+                                        <i class="fa fa-search text-gray-600"></i>
+                                        <i class="fa fa-plus text-gray-600"></i>
+                                    </div>
+                                </div>
+                                <div class="flex justify-center mb-4">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+                                        <i class="fa fa-user text-3xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <div class="text-center mb-4">
+                                    <p class="font-medium">点击右上角 + 按钮</p>
+                                </div>
+                                <div class="flex justify-center">
+                                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                        <i class="fa fa-plus text-primary text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤2 -->
+                <div class="flex flex-col md:flex-row-reverse gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">2</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">扫描二维码</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            将手机摄像头对准下方的二维码，等待微信自动识别并跳转。
+                        </p>
+                        <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-exclamation-triangle text-yellow-500 mr-1"></i>
+                                注意：请确保扫描的是官方提供的二维码，避免扫描不明来源的二维码。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-black p-4">
+                                <div class="flex justify-center mb-4">
+                                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4c6f4d4b2617430490899aee12a95913~tplv-a9rns2rl98-image.image?rcl=202512292118111735709F5FC60CA1D9D9&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769606307&x-signature=sIF9T3%2B3d0Ta0DkvIx7xoNF%2BXDA%3D" alt="TMP查询工具二维码" class="w-40 h-40 object-contain">
+                                </div>
+                                <div class="text-center text-white">
+                                    <p class="text-sm">欧卡2 TMP查询工具</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤3 -->
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">3</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">开始使用工具</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            扫描成功后，微信会自动打开TMP查询工具页面。现在您可以输入TMP用户名进行查询了！
+                        </p>
+                        <div class="bg-green-50 border border-green-200 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-check-circle text-green-500 mr-1"></i>
+                                成功！您现在可以使用TMP查询工具了。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D" alt="Logo" class="w-8 h-8 rounded">
+                                    <div>
+                                        <h3 class="font-bold">欧卡2 TMP查询</h3>
+                                        <p class="text-xs text-gray-500">快速查询TMP账号信息</p>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <input type="text" placeholder="请输入TMP用户名或ID" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                </div>
+                                <div class="mb-4">
+                                    <select class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                        <option>查询账号信息</option>
+                                        <option>查询封禁记录</option>
+                                        <option>查询VTC信息</option>
+                                    </select>
+                                </div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg text-sm">
+                                    开始查询
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 方法二：链接访问 -->
+        <div id="method-2" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-6 wechat-text-primary flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">2</div>
+                方法二：链接访问
+            </h3>
+            
+            <div class="space-y-8">
+                <!-- 步骤1 -->
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">1</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">获取分享链接</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            从微信群、好友聊天或公众号中获取TMP查询工具的分享链接。
+                        </p>
+                        <div class="bg-gray-100 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-info-circle text-primary mr-1"></i>
+                                提示：链接通常以 https:// 开头，包含 tmp-query 或类似关键词。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                                        A
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">好友A</p>
+                                        <p class="text-xs text-gray-500">刚刚</p>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 rounded-lg p-3 mb-4">
+                                    <p class="text-sm">这是我们车队的TMP查询工具，很好用！</p>
+                                    <div class="mt-2 p-2 bg-white rounded border border-gray-200">
+                                        <p class="text-xs text-primary">https://tmp-query.example.com</p>
+                                        <p class="text-xs text-gray-500 mt-1">欧卡2 TMP查询工具</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="输入消息..." class="flex-1 border border-gray-300 rounded-lg p-2 text-sm">
+                                    <button class="bg-primary text-white px-3 rounded-lg text-sm">
+                                        发送
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤2 -->
+                <div class="flex flex-col md:flex-row-reverse gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">2</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">点击链接</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            点击收到的分享链接，微信会自动在内置浏览器中打开TMP查询工具。
+                        </p>
+                        <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-exclamation-triangle text-yellow-500 mr-1"></i>
+                                注意：请确保点击的是来自可信来源的链接，避免点击不明链接。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                                        A
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">好友A</p>
+                                        <p class="text-xs text-gray-500">刚刚</p>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 rounded-lg p-3 mb-4">
+                                    <p class="text-sm">这是我们车队的TMP查询工具，很好用！</p>
+                                    <div class="mt-2 p-2 bg-white rounded border border-gray-200 cursor-pointer hover:bg-primary/5 transition-colors">
+                                        <p class="text-xs text-primary">https://tmp-query.example.com</p>
+                                        <p class="text-xs text-gray-500 mt-1">欧卡2 TMP查询工具</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="输入消息..." class="flex-1 border border-gray-300 rounded-lg p-2 text-sm">
+                                    <button class="bg-primary text-white px-3 rounded-lg text-sm">
+                                        发送
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤3 -->
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">3</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">开始使用工具</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            链接打开后，您就可以在微信内置浏览器中使用TMP查询工具了！
+                        </p>
+                        <div class="bg-green-50 border border-green-200 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-check-circle text-green-500 mr-1"></i>
+                                成功！您现在可以使用TMP查询工具了。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="h-6 bg-gray-100 rounded-t-lg mb-2 flex items-center px-3">
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mx-auto">微信浏览器</div>
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-3">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ff6469b040f945808b770de8f427535f~tplv-a9rns2rl98-image.image?rcl=20251229210454775B413714DE41CFE0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769605512&x-signature=bf2%2BTNMXZh%2FFUnkJbb%2BoPLChM%2FU%3D" alt="Logo" class="w-8 h-8 rounded">
+                                        <div>
+                                            <h3 class="font-bold">欧卡2 TMP查询</h3>
+                                            <p class="text-xs text-gray-500">快速查询TMP账号信息</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <input type="text" placeholder="请输入TMP用户名或ID" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                                    </div>
+                                    <button class="w-full bg-primary text-white py-2 rounded-lg text-sm">
+                                        开始查询
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 方法三：机器人查询 -->
+        <div id="method-3" class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-6 wechat-text-primary flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">3</div>
+                方法三：机器人查询
+            </h3>
+            
+            <div class="space-y-8">
+                <!-- 步骤1 -->
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">1</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">确保机器人在群中</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            确保TMP查询机器人已经加入到您的欧卡2游戏群中。您可以在群成员列表中查看机器人是否存在。
+                        </p>
+                        <div class="bg-gray-100 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-info-circle text-primary mr-1"></i>
+                                提示：机器人通常命名为"TMP查询机器人"或类似名称。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">
+                                            🚛
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">欧卡2车队群</p>
+                                            <p class="text-xs text-gray-500">32人</p>
+                                        </div>
+                                    </div>
+                                    <i class="fa fa-ellipsis-v text-gray-500"></i>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-sm font-medium mb-2">群成员</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+                                            成员1
+                                        </div>
+                                        <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-xs">
+                                            🤖
+                                        </div>
+                                        <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs">
+                                            成员2
+                                        </div>
+                                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
+                                            +29
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center text-sm text-primary">
+                                    找到机器人(🤖)图标
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤2 -->
+                <div class="flex flex-col md:flex-row-reverse gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">2</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">发送查询命令</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            在群聊中发送查询命令，格式为：<span class="highlight">#查询TMP 用户名</span>，其中"用户名"替换为您要查询的TMP用户名。
+                        </p>
+                        <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-lightbulb-o text-blue-500 mr-1"></i>
+                                小贴士：您也可以使用 "@机器人 查询TMP 用户名" 的格式。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">
+                                        🚛
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">欧卡2车队群</p>
+                                        <p class="text-xs text-gray-500">32人</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 mb-4">
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs flex-shrink-0 mt-1">
+                                            我
+                                        </div>
+                                        <div class="bg-gray-100 rounded-lg p-2 text-sm">
+                                            #查询TMP yy10871
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="输入消息..." class="flex-1 border border-gray-300 rounded-lg p-2 text-sm">
+                                    <button class="bg-primary text-white px-3 rounded-lg text-sm">
+                                        发送
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤3 -->
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-1/2">
+                        <div class="step-number mb-4">3</div>
+                        <h4 class="font-bold wechat-text-primary mb-2">查看查询结果</h4>
+                        <p class="wechat-text-secondary mb-4">
+                            机器人会自动查询并在群聊中回复查询结果，包含账号信息、封禁状态等详细内容。
+                        </p>
+                        <div class="bg-green-50 border border-green-200 p-3 rounded-lg">
+                            <p class="text-sm wechat-text-primary">
+                                <i class="fa fa-check-circle text-green-500 mr-1"></i>
+                                成功！您可以在群聊中看到查询结果了。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="screenshot-frame max-w-xs">
+                            <div class="bg-gray-100 h-8 flex items-center px-3">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-white p-4">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">
+                                        🚛
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">欧卡2车队群</p>
+                                        <p class="text-xs text-gray-500">32人</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 mb-4">
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs flex-shrink-0 mt-1">
+                                            我
+                                        </div>
+                                        <div class="bg-gray-100 rounded-lg p-2 text-sm">
+                                            #查询TMP yy10871
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs flex-shrink-0 mt-1">
+                                            🤖
+                                        </div>
+                                        <div class="bg-primary/10 rounded-lg p-2 text-sm">
+                                            <p class="font-medium">TMP查询机器人</p>
+                                            <p class="text-xs">🔍 正在查询TMP用户 "yy10871"，请稍候...</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs flex-shrink-0 mt-1">
+                                            🤖
+                                        </div>
+                                        <div class="bg-primary/10 rounded-lg p-2 text-sm">
+                                            <p class="font-medium">TMP查询机器人</p>
+                                            <p class="text-xs">
+                                                🚛 <strong>TMP账号查询结果</strong> 🚛<br>
+                                                👤 <strong>用户名</strong>: yy10871<br>
+                                                🆔 <strong>TMP ID</strong>: 123456<br>
+                                                🕒 <strong>加入时间</strong>: 2023年1月15日<br>
+                                                🎮 <strong>Steam名称</strong>: yy10871<br>
+                                                📊 <strong>游戏时长</strong>: 1234小时<br>
+                                                🟢 <strong>在线状态</strong>: 🟢 在线<br>
+                                                ⚠️ <strong>封禁状态</strong>: ✅ 正常<br>
+                                                <br>
+                                                💡 提示：发送 "#查询TMP 用户名" 继续查询
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="输入消息..." class="flex-1 border border-gray-300 rounded-lg p-2 text-sm">
+                                    <button class="bg-primary text-white px-3 rounded-lg text-sm">
+                                        发送
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 查询示例 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">查询示例</h3>
+            
+            <div class="space-y-6">
+                <!-- 示例1：查询账号信息 -->
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-3">示例1：查询账号基本信息</h4>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div class="mb-3">
+                            <p class="text-sm font-medium text-gray-600 mb-1">查询命令：</p>
+                            <p class="text-sm bg-white p-2 rounded border border-gray-200">#查询TMP yy10871</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-600 mb-1">查询结果：</p>
+                            <div class="text-sm bg-white p-3 rounded border border-gray-200">
+                                <p>🚛 <strong>TMP账号查询结果</strong> 🚛</p>
+                                <p class="mt-2">👤 <strong>用户名</strong>: yy10871</p>
+                                <p>🆔 <strong>TMP ID</strong>: 123456</p>
+                                <p>🕒 <strong>加入时间</strong>: 2023年1月15日</p>
+                                <p>🎮 <strong>Steam名称</strong>: yy10871</p>
+                                <p>📊 <strong>游戏时长</strong>: 1234小时</p>
+                                <p>🟢 <strong>在线状态</strong>: 🟢 在线</p>
+                                <p>🚚 <strong>所属VTC</strong>: 示例车队 [EX]</p>
+                                <p>⚠️ <strong>封禁状态</strong>: ✅ 正常 (无封禁记录)</p>
+                                <p class="mt-2">🔗 <strong>查询链接</strong>: https://truckersmp.com/user/123456</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 示例2：查询封禁记录 -->
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-3">示例2：查询封禁记录</h4>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div class="mb-3">
+                            <p class="text-sm font-medium text-gray-600 mb-1">查询命令：</p>
+                            <p class="text-sm bg-white p-2 rounded border border-gray-200">#查询TMP trucker001</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-600 mb-1">查询结果：</p>
+                            <div class="text-sm bg-white p-3 rounded border border-gray-200">
+                                <p>🚛 <strong>TMP账号查询结果</strong> 🚛</p>
+                                <p class="mt-2">👤 <strong>用户名</strong>: trucker001</p>
+                                <p>🆔 <strong>TMP ID</strong>: 123457</p>
+                                <p>⚠️ <strong>封禁状态</strong>: ✅ 正常</p>
+                                <p>📝 <strong>历史封禁</strong>: 1次</p>
+                                <p>🔍 <strong>最近封禁</strong>:</p>
+                                <p class="ml-4">- 原因：超速行驶</p>
+                                <p class="ml-4">- 时间：2023年6月15日</p>
+                                <p class="ml-4">- 持续时间：24小时</p>
+                                <p class="mt-2">💡 <strong>提示</strong>: 该用户曾有过封禁记录，但目前状态正常</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 示例3：帮助命令 -->
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-3">示例3：查看帮助</h4>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div class="mb-3">
+                            <p class="text-sm font-medium text-gray-600 mb-1">查询命令：</p>
+                            <p class="text-sm bg-white p-2 rounded border border-gray-200">#TMP帮助</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-600 mb-1">查询结果：</p>
+                            <div class="text-sm bg-white p-3 rounded border border-gray-200">
+                                <p>🤖 <strong>欧卡2 TMP查询机器人使用说明</strong></p>
+                                <p class="mt-2">📝 <strong>查询命令</strong>:</p>
+                                <p class="ml-4">- #查询TMP 用户名</p>
+                                <p class="ml-4">- @机器人 查询TMP 用户名</p>
+                                <p class="ml-4">- /查询TMP 用户名</p>
+                                <p class="mt-2">📋 <strong>其他命令</strong>:</p>
+                                <p class="ml-4">- #历史查询 - 查看查询历史</p>
+                                <p class="ml-4">- #TMP帮助 - 显示此帮助信息</p>
+                                <p class="mt-2">💡 <strong>示例</strong>:</p>
+                                <p class="ml-4">#查询TMP yy10871</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="wechat-card p-6 mb-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">常见问题</h3>
+            
+            <div class="space-y-4">
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 为什么扫描二维码后提示"不安全"？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 这是因为工具网站没有配置HTTPS证书。微信要求所有网页必须使用HTTPS协议。请联系管理员为网站配置SSL证书。
+                    </p>
+                </div>
+                
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 查询结果显示"未找到用户"怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 请检查您输入的TMP用户名是否正确，注意大小写和空格。如果用户名正确但仍未找到，可能是该用户不存在或已被删除。
+                    </p>
+                </div>
+                
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 机器人不回复我的命令怎么办？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 请检查您的命令格式是否正确，确保使用了正确的命令前缀（如"#查询TMP"）。如果格式正确但机器人仍不回复，可能是机器人暂时离线或出现故障，请联系管理员。
+                    </p>
+                </div>
+                
+                <div class="border-b border-gray-200 pb-4">
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 如何收藏常用的查询结果？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 在网页版工具中，查询结果页面有"收藏"按钮，点击即可收藏当前查询的用户。在机器人查询中，您可以将查询结果转发给自己或保存到聊天记录中。
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-medium wechat-text-primary mb-2">Q: 工具支持查询哪些信息？</h4>
+                    <p class="text-sm wechat-text-secondary">
+                        A: 工具支持查询TMP账号的基本信息（用户名、ID、加入时间等）、在线状态、游戏时长、封禁记录和所属VTC团队信息。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 联系支持 -->
+        <div class="wechat-card p-6">
+            <h3 class="text-lg font-bold mb-4 wechat-text-primary">联系支持</h3>
+            <p class="wechat-text-secondary mb-4">
+                如果您在使用过程中遇到任何问题，或需要进一步的帮助，请通过以下方式联系我们：
+            </p>
+            <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-envelope text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm wechat-text-tertiary">邮箱</p>
+                        <p class="wechat-text-primary">support@example.com</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-wechat text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm wechat-text-tertiary">微信</p>
+                        <p class="wechat-text-primary">WeChatSupport</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa fa-question-circle text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm wechat-text-tertiary">常见问题</p>
+                        <a href="#" class="wechat-text-primary hover:underline">查看更多帮助</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="bg-primary text-white mt-6">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-sm">欧卡2 TMP查询工具 - 微信快速上手指南</p>
+                    <p class="text-xs text-white/60">© 2025 TMP Query Tool. All rights reserved.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fa fa-arrow-left mr-1"></i> 返回工具
+                    </a>
+                    <a href="wechat_guide.html" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fa fa-book mr-1"></i> 详细指南
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
